@@ -6,9 +6,6 @@ automake/autoconf support
    Detect Guile, GSL, LAPACK; install into proper directory.
 
 
-Support Guile 1.6 handling of dynamically linked libraries
-
-
 Expand GSL support
 
   Properly integrate functions reading/writing to file, ntuple, siman,
@@ -28,6 +25,10 @@ High level Scheme interface
   Abstract away the low level allocation/deallocation routines and
   improve integration with Guile.
 
+
+Stability
+
+  Properly throw and catch low-level error codes from fault conditions.
 
 Bugs
 
