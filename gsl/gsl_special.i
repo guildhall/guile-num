@@ -276,6 +276,6 @@ extern double gsl_sf_eta (double S);
 
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-special.la"))
+(define my-so (dynamic-link "libguile-gsl-special.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

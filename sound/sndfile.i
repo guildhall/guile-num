@@ -145,6 +145,6 @@ extern sf_count_t sf_writef_double (SNDFILE *sndfile, double *ptr, sf_count_t fr
 
 
 %scheme %{
-(define my-so (dynamic-link "sound/libguile-sndfile.so"))
+(define my-so (dynamic-link "libguile-sndfile.so"))
 (dynamic-call "SWIG_init" my-so)
 %}

@@ -421,6 +421,6 @@ fftw_complex* gsl_vector_complex_fftw_complex(gsl_vector_complex *v);
 
 
 %scheme %{
-(define my-so (dynamic-link "fftw/libguile-fftw.la"))
+(define my-so (dynamic-link "libguile-fftw.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

@@ -166,7 +166,7 @@ void gsl_siman_destroy (void *xp);
 
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-siman.la"))
+(define my-so (dynamic-link "libguile-gsl-siman.la"))
 (dynamic-call "SWIG_init" my-so)
 
 (export gsl-siman-solve)

@@ -36,6 +36,6 @@ extern int gsl_integration_qawo (gsl_function * F, const double A, const double 
 extern int gsl_integration_qawf (gsl_function * F, const double A, const double EPSABS, const size_t LIMIT, gsl_integration_workspace * WORKSPACE, gsl_integration_workspace * CYCLE_WORKSPACE, gsl_integration_qawo_table * WF, double *OUTPUT, double *OUTPUT);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-integration.la"))
+(define my-so (dynamic-link "libguile-gsl-integration.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

@@ -164,7 +164,7 @@ int gsl_zgels(int conjugate, gsl_matrix_complex * a, gsl_matrix_complex * b);
              (gsl gsl-vector)
 	     (gsl gsl-matrix))
 
-(define my-so (dynamic-link "lapack/libguile-lapack.so"))
+(define my-so (dynamic-link "libguile-lapack.so"))
 (dynamic-call "SWIG_init" my-so)
 
 (export dgesv

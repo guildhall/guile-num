@@ -134,7 +134,7 @@ extern int gsl_matrix_complex_memcpy (gsl_matrix_complex * DEST, const gsl_matri
 %scheme %{
 (use-modules (gsl gsl-math))
 
-(define my-so (dynamic-link "gsl/libguile-gsl-matrix.la"))
+(define my-so (dynamic-link "libguile-gsl-matrix.la"))
 (dynamic-call "SWIG_init" my-so)
 
 (export matrix->gsl-matrix-int

@@ -150,7 +150,7 @@ extern void gsl_sort_vector_largest_index (size_t * P, size_t K, const gsl_vecto
 %scheme %{
 (use-modules (gsl gsl-math))
 
-(define my-so (dynamic-link "gsl/libguile-gsl-vector.la"))
+(define my-so (dynamic-link "libguile-gsl-vector.la"))
 (dynamic-call "SWIG_init" my-so)
 
 (export vector->gsl-vector-int

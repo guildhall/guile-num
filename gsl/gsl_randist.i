@@ -121,6 +121,6 @@ extern int gsl_ran_choose (const gsl_rng * R, void * DEST, size_t K, void * SRC,
 extern void gsl_ran_sample (const gsl_rng * R, void * DEST, size_t K, void * SRC, size_t N, size_t SIZE);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-randist.la"))
+(define my-so (dynamic-link "libguile-gsl-randist.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

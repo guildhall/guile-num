@@ -18,6 +18,6 @@ extern const gsl_qrng_type * gsl_qrng_niederreiter_2;
 extern const gsl_qrng_type * gsl_qrng_sobol;
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-qrng.la"))
+(define my-so (dynamic-link "libguile-gsl-qrng.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

@@ -68,6 +68,6 @@ extern int gsl_fft_real_unpack (const double REAL_COEFFICIENT[], gsl_complex_pac
 extern int gsl_fft_halfcomplex_unpack (const double HALFCOMPLEX_COEFFICIENT[], gsl_complex_packed_array COMPLEX_COEFFICIENT, size_t STRIDE, size_t N);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-fft.la"))
+(define my-so (dynamic-link "libguile-gsl-fft.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

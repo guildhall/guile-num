@@ -1,4 +1,6 @@
 gsl_*_wrap.c
+*.la
+*.lo
 lapack.scm
 Makefile.in
 Makefile

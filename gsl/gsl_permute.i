@@ -35,6 +35,6 @@ extern size_t gsl_permutation_linear_cycles (const gsl_permutation * P);
 extern size_t gsl_permutation_canonical_cycles (const gsl_permutation * Q);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-permute.la"))
+(define my-so (dynamic-link "libguile-gsl-permute.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

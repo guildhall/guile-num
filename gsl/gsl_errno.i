@@ -67,6 +67,6 @@ previous_error_handler = gsl_set_error_handler(guile_gsl_error_handler);
 %}
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-errno.la"))
+(define my-so (dynamic-link "libguile-gsl-errno.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

@@ -1,5 +1,9 @@
 gsl_*_wrap.c
 gsl-*.scm
+*.c
+*.lo
+*.la
 Makefile.in
 Makefile
 .deps
+.libs

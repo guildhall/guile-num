@@ -121,6 +121,6 @@ extern const gsl_rng_type *gsl_rng_waterman14;
 extern const gsl_rng_type *gsl_rng_zuf;
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-rng.la"))
+(define my-so (dynamic-link "libguile-gsl-rng.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

@@ -26,6 +26,6 @@ extern double gsl_min_fminimizer_f_lower (const gsl_min_fminimizer *S);
 extern int gsl_min_test_interval (double X_LOWER, double X_UPPER, double EPSABS, double EPSREL);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-minimize.la"))
+(define my-so (dynamic-link "libguile-gsl-minimize.la"))
 (dynamic-call "SWIG_init" my-so)
 %}
