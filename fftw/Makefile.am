@@ -1,9 +1,9 @@
 SWIG = swig
-SWIGFLAGS = -guile -c
-LDADD = -lswigguile -lfftw3 -lm
+SWIGFLAGS = -guile -scmstub -Linkage module -outdir ..
+LDADD = -lfftw3 -lm
 
-subpkgdatadir = $(datadir)/guile/fftw
-subpkgdata_DATA = *.scm
+#subpkgdatadir = $(datadir)/guile/fftw
+#subpkgdata_DATA = *.scm
 
 SWIG_INTERFACES = \
 	fftw.i
@@ -19,8 +19,9 @@ libguile_fftw_la_LDFLAGS = $(LDADD)
 
 SUFFIXES = .i
 .i.c:
-	$(SWIG) $(SWIGFLAGS) \
-  -scmstub $$(basename $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
-  -o $@ $<
+	$(SWIG) $(SWIGFLAGS) -o $@ $<
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.scm
+# -scmstub $$(basename $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
+#
+
+MOSTLYCLEANFILES = $(BUILT_SOURCES)

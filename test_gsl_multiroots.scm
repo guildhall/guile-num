@@ -1,7 +1,7 @@
-(use-modules (gsl gsl-errno))
-(use-modules (gsl gsl-vector))
-(use-modules (gsl gsl-matrix))
-(use-modules (gsl gsl-multiroots))
+(use-modules (gsl errno))
+(use-modules (gsl vector))
+(use-modules (gsl matrix))
+(use-modules (gsl multiroots))
 (use-modules (ice-9 format))
 
 (define (cout . args)

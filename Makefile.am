@@ -1,6 +1,6 @@
 SUBDIRS = finance fftw gsl lapack math plot signal sound testfun
 
-dist_data_DATA = test_finance_account.scm test_gsl_blas.scm	       \
+dist_data_DATA = test_finance_account.scm test_gsl_blas.scm    \
 test_gsl_chebyshev.scm test_gsl_diff.scm test_gsl_fit.scm      \
 test_gsl_integration.scm test_gsl_interp.scm test_gsl_math.scm \
 test_gsl_minimize.scm test_gsl_monte.scm test_gsl_multimin.scm \

@@ -1,7 +1,7 @@
-(use-modules (gsl gsl-function))
-(use-modules (gsl gsl-min))
-(use-modules (gsl gsl-math))
-(use-modules (gsl gsl-errno))
+(use-modules (gsl function))
+(use-modules (gsl min))
+(use-modules (gsl math))
+(use-modules (gsl errno))
 (use-modules (ice-9 format))
 
 (define (cout . args)

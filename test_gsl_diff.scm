@@ -1,5 +1,5 @@
-(use-modules (gsl gsl-diff))
-(use-modules (gsl gsl-function))
+(use-modules (gsl diff))
+(use-modules (gsl function))
 (use-modules (ice-9 format))
 
 (define (f x)

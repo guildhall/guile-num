@@ -1,11 +1,12 @@
 SWIG = swig
-SWIGFLAGS = -guile -c
+SWIGFLAGS = -guile -scmstub -Linkage module -outdir ..
 PP = $(top_srcdir)/destill.scm
 
-LDADD = -lswigguile -lgsl -lgslcblas -lguile
+CFLAGS = $(GUILE_CFLAGS)
+LDADD = -lgsl -lgslcblas $(GUILE_LIBS)
 
 subpkgdatadir = $(datadir)/guile/gsl
-subpkgdata_DATA = *.scm
+#subpkgdata_DATA = *.scm
 
 GSL_HEADERFILES =				\
 	gsl_blas.h				\
@@ -47,13 +48,48 @@ GSL_HEADERFILES =				\
 	gsl_vector.h
 
 SWIG_INTERFACES =				\
-	$(GSL_HEADERFILES:.h=.i)		\
-	gsl_function.i
+	blas.i					\
+	block.i					\
+	chebyshev.i				\
+	combination.i				\
+	dht.i					\
+	diff.i					\
+	eigen.i					\
+	errno.i					\
+	fft.i					\
+	fit.i					\
+	histogram.i				\
+	histogram2d.i				\
+	integration.i				\
+	interp.i				\
+	linalg.i				\
+	math.i					\
+	matrix.i				\
+	min.i					\
+	monte.i					\
+	multifit.i				\
+	multimin.i				\
+	multiroots.i				\
+	odeiv.i					\
+	permute.i				\
+	poly.i					\
+	qrng.i					\
+	randist.i				\
+	rng.i					\
+	roots.i					\
+	sf.i					\
+	siman.i					\
+	sort.i					\
+	sortvector.i				\
+	spline.i				\
+	statistics.i				\
+	sum.i					\
+	vector.i				\
+	function.i
 
 BUILT_SOURCES =					\
 	$(GSL_HEADERFILES:.h=_inc.i)		\
-	$(SWIG_INTERFACES:.i=.c)		\
-	*.scm
+	$(SWIG_INTERFACES:.i=.c)
 
 lib_LTLIBRARIES =				\
 	libguile-gsl-blas.la			\
@@ -94,87 +130,87 @@ lib_LTLIBRARIES =				\
 	libguile-gsl-statistics.la		\
 	libguile-gsl-vector.la
 
-libguile_gsl_blas_la_SOURCES =  gsl_blas.c
+libguile_gsl_blas_la_SOURCES =  blas.c
 libguile_gsl_blas_la_LDFLAGS = $(LDADD)
-libguile_gsl_block_la_SOURCES = gsl_block.c
+libguile_gsl_block_la_SOURCES = block.c
 libguile_gsl_block_la_LDFLAGS = $(LDADD)
-libguile_gsl_chebyshev_la_SOURCES = gsl_chebyshev.c
+libguile_gsl_chebyshev_la_SOURCES = chebyshev.c
 libguile_gsl_chebyshev_la_LDFLAGS = $(LDADD)
-libguile_gsl_combination_la_SOURCES = gsl_combination.c
+libguile_gsl_combination_la_SOURCES = combination.c
 libguile_gsl_combination_la_LDFLAGS = $(LDADD)
-libguile_gsl_dht_la_SOURCES = gsl_dht.c
+libguile_gsl_dht_la_SOURCES = dht.c
 libguile_gsl_dht_la_LDFLAGS = $(LDADD)
-libguile_gsl_diff_la_SOURCES = gsl_diff.c
+libguile_gsl_diff_la_SOURCES = diff.c
 libguile_gsl_diff_la_LDFLAGS = $(LDADD)
-libguile_gsl_eigen_la_SOURCES = gsl_eigen.c
+libguile_gsl_eigen_la_SOURCES = eigen.c
 libguile_gsl_eigen_la_LDFLAGS = $(LDADD)
-libguile_gsl_errno_la_SOURCES = gsl_errno.c
+libguile_gsl_errno_la_SOURCES = errno.c
 libguile_gsl_errno_la_LDFLAGS = $(LDADD)
-libguile_gsl_fft_la_SOURCES = gsl_fft.c
+libguile_gsl_fft_la_SOURCES = fft.c
 libguile_gsl_fft_la_LDFLAGS = $(LDADD)
-libguile_gsl_fit_la_SOURCES = gsl_fit.c
+libguile_gsl_fit_la_SOURCES = fit.c
 libguile_gsl_fit_la_LDFLAGS = $(LDADD)
-libguile_gsl_function_la_SOURCES = gsl_function.c
+libguile_gsl_function_la_SOURCES = function.c
 libguile_gsl_function_la_LDFLAGS = $(LDADD)
-libguile_gsl_histogram_la_SOURCES = gsl_histogram.c
+libguile_gsl_histogram_la_SOURCES = histogram.c
 libguile_gsl_histogram_la_LDFLAGS = $(LDADD)
-libguile_gsl_histogram2d_la_SOURCES = gsl_histogram2d.c
+libguile_gsl_histogram2d_la_SOURCES = histogram2d.c
 libguile_gsl_histogram2d_la_LDFLAGS = $(LDADD)
-libguile_gsl_integration_la_SOURCES = gsl_integration.c
+libguile_gsl_integration_la_SOURCES = integration.c
 libguile_gsl_integration_la_LDFLAGS = $(LDADD)
-libguile_gsl_interp_la_SOURCES = gsl_interp.c
+libguile_gsl_interp_la_SOURCES = interp.c
 libguile_gsl_interp_la_LDFLAGS = $(LDADD)
-libguile_gsl_linalg_la_SOURCES = gsl_linalg.c
+libguile_gsl_linalg_la_SOURCES = linalg.c
 libguile_gsl_linalg_la_LDFLAGS = $(LDADD)
-libguile_gsl_math_la_SOURCES = gsl_math.c
+libguile_gsl_math_la_SOURCES = math.c
 libguile_gsl_math_la_LDFLAGS = $(LDADD)
-libguile_gsl_matrix_la_SOURCES = gsl_matrix.c
+libguile_gsl_matrix_la_SOURCES = matrix.c
 libguile_gsl_matrix_la_LDFLAGS = $(LDADD)
-libguile_gsl_min_la_SOURCES = gsl_min.c
+libguile_gsl_min_la_SOURCES = min.c
 libguile_gsl_min_la_LDFLAGS = $(LDADD)
-libguile_gsl_monte_la_SOURCES = gsl_monte.c
+libguile_gsl_monte_la_SOURCES = monte.c
 libguile_gsl_monte_la_LDFLAGS = $(LDADD)
-libguile_gsl_multifit_la_SOURCES = gsl_multifit.c
+libguile_gsl_multifit_la_SOURCES = multifit.c
 libguile_gsl_multifit_la_LDFLAGS = $(LDADD)
-libguile_gsl_multimin_la_SOURCES = gsl_multimin.c
+libguile_gsl_multimin_la_SOURCES = multimin.c
 libguile_gsl_multimin_la_LDFLAGS = $(LDADD)
-libguile_gsl_multiroots_la_SOURCES = gsl_multiroots.c
+libguile_gsl_multiroots_la_SOURCES = multiroots.c
 libguile_gsl_multiroots_la_LDFLAGS = $(LDADD)
-libguile_gsl_permute_la_SOURCES = gsl_permute.c
+libguile_gsl_permute_la_SOURCES = permute.c
 libguile_gsl_permute_la_LDFLAGS = $(LDADD)
-libguile_gsl_poly_la_SOURCES = gsl_poly.c
+libguile_gsl_poly_la_SOURCES = poly.c
 libguile_gsl_poly_la_LDFLAGS = $(LDADD)
-libguile_gsl_qrng_la_SOURCES = gsl_qrng.c
+libguile_gsl_qrng_la_SOURCES = qrng.c
 libguile_gsl_qrng_la_LDFLAGS = $(LDADD)
-libguile_gsl_randist_la_SOURCES = gsl_randist.c
+libguile_gsl_randist_la_SOURCES = randist.c
 libguile_gsl_randist_la_LDFLAGS = $(LDADD)
-libguile_gsl_rng_la_SOURCES = gsl_rng.c
+libguile_gsl_rng_la_SOURCES = rng.c
 libguile_gsl_rng_la_LDFLAGS = $(LDADD)
-libguile_gsl_roots_la_SOURCES = gsl_roots.c
+libguile_gsl_roots_la_SOURCES = roots.c
 libguile_gsl_roots_la_LDFLAGS = $(LDADD)
-libguile_gsl_siman_la_SOURCES = gsl_siman.c
+libguile_gsl_siman_la_SOURCES = siman.c
 libguile_gsl_siman_la_LDFLAGS = $(LDADD)
-libguile_gsl_sf_la_SOURCES = gsl_sf.c
+libguile_gsl_sf_la_SOURCES = sf.c
 libguile_gsl_sf_la_LDFLAGS = $(LDADD)
-libguile_gsl_sort_la_SOURCES = gsl_sort.c
+libguile_gsl_sort_la_SOURCES = sort.c
 libguile_gsl_sort_la_LDFLAGS = $(LDADD)
-libguile_gsl_sort_vector_la_SOURCES = gsl_sort_vector.c
+libguile_gsl_sort_vector_la_SOURCES = sortvector.c
 libguile_gsl_sort_vector_la_LDFLAGS = $(LDADD)
-libguile_gsl_spline_la_SOURCES = gsl_spline.c
+libguile_gsl_spline_la_SOURCES = spline.c
 libguile_gsl_spline_la_LDFLAGS = $(LDADD)
-libguile_gsl_sum_la_SOURCES = gsl_sum.c
+libguile_gsl_sum_la_SOURCES = sum.c
 libguile_gsl_sum_la_LDFLAGS = $(LDADD)
-libguile_gsl_statistics_la_SOURCES = gsl_statistics.c
+libguile_gsl_statistics_la_SOURCES = statistics.c
 libguile_gsl_statistics_la_LDFLAGS = $(LDADD)
-libguile_gsl_vector_la_SOURCES = gsl_vector.c
+libguile_gsl_vector_la_SOURCES = vector.c
 libguile_gsl_vector_la_LDFLAGS = $(LDADD)
 
 
 SUFFIXES = .i
 %.c: %.i
-	$(SWIG) $(SWIGFLAGS) \
-  -scmstub $$(basename $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
-  -o $@ $<
+	$(SWIG) $(SWIGFLAGS) -o $@ $<
+
+## -scmstub $$(basename $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') 
 
 gsl_blas_inc.i: /usr/include/gsl/gsl_blas.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_(c|)blas.*' > $@
@@ -297,4 +333,4 @@ gsl_vector_inc.i: /usr/include/gsl/gsl_vector.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_vector.*' > $@
 
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES)
+MOSTLYCLEANFILES = $(BUILT_SOURCES) *.scm

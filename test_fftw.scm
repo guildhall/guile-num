@@ -1,5 +1,5 @@
 (use-modules (fftw fftw)
-	     (gsl gsl-vector)
+	     (gsl vector)
 	     (math array-fun)
 	     (ice-9 format))
 

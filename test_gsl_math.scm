@@ -1,4 +1,4 @@
-(use-modules (gsl gsl-math))
+(use-modules (gsl math))
 
 (let ((z (gsl-complex-alloc)))
   (gsl-set-complex z 3.0 4.0)

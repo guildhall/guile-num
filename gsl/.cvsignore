@@ -1,5 +1,5 @@
-gsl_*_wrap.c
-gsl-*.scm
+gsl_*
+gsl-*
 *_inc.i
 *.c
 *.lo

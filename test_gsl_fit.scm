@@ -1,5 +1,5 @@
-(use-modules (gsl gsl-vector))
-(use-modules (gsl gsl-fit))
+(use-modules (gsl vector))
+(use-modules (gsl fit))
 (use-modules (ice-9 format))
 
 (define (cout . args)

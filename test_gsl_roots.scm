@@ -1,6 +1,6 @@
-(use-modules (gsl gsl-function))
-(use-modules (gsl gsl-roots))
-(use-modules (gsl gsl-errno))
+(use-modules (gsl function))
+(use-modules (gsl roots))
+(use-modules (gsl errno))
 (use-modules (ice-9 format))
 
 (define (cout . args)

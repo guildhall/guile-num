@@ -1,7 +1,7 @@
-(use-modules (gsl gsl-errno)
-	     (gsl gsl-interp)
-	     (gsl gsl-spline)
-	     (gsl gsl-vector))
+(use-modules (gsl errno)
+	     (gsl interp)
+	     (gsl spline)
+	     (gsl vector))
 
 (define len 10)
 

@@ -1,5 +1,5 @@
-(use-modules (gsl gsl-integration))
-(use-modules (gsl gsl-function))
+(use-modules (gsl integration))
+(use-modules (gsl function))
 
 
 (let* ((alpha 1.0)

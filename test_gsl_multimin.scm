@@ -1,7 +1,7 @@
-(use-modules (gsl gsl-errno)
-	     (gsl gsl-vector)
-	     (gsl gsl-matrix)
-	     (gsl gsl-multimin)
+(use-modules (gsl errno)
+	     (gsl vector)
+	     (gsl matrix)
+	     (gsl multimin)
 	     (ice-9 format))
 
 (define (paraboloid a b)

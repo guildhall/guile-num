@@ -1,7 +1,7 @@
 SWIG = swig
-SWIGFLAGS = -guile -c
+SWIGFLAGS = -guile -scmstub -Linkage module -outdir ..
 LD = g77
-LDADD = -lswigguile @FLIBS@ -llapack -lblas2
+LDADD = @FLIBS@ -llapack -lblas2
 
 subpkgdatadir = $(datadir)/guile/lapack
 subpkgdata_DATA = lapack.scm
@@ -20,8 +20,6 @@ libguile_lapack_la_LDFLAGS = $(LDADD)
 
 SUFFIXES = .i
 .i.c:
-	$(SWIG) $(SWIGFLAGS) \
-  -scmstub $$(basename $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
-  -o $@ $<
+	$(SWIG) $(SWIGFLAGS) -o $@ $<
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.scm

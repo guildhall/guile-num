@@ -1,5 +1,5 @@
-(use-modules (gsl gsl-function))
-(use-modules (gsl gsl-chebyshev))
+(use-modules (gsl function))
+(use-modules (gsl chebyshev))
 (use-modules (ice-9 format))
 
 (define (f x)

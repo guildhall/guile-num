@@ -1,5 +1,5 @@
-(use-modules (gsl gsl-odeiv))
-(use-modules (gsl gsl-matrix))
+(use-modules (gsl odeiv))
+(use-modules (gsl matrix))
 
 (define uref uniform-vector-ref)
 (define (list->vct lst)

@@ -1,8 +1,8 @@
 SWIG = swig
-SWIGFLAGS = -guile -c
+SWIGFLAGS = -guile -scmstub -Linkage module -outdir ..
 PP = $(top_srcdir)/destill.scm
 
-LDADD = -lswigguile -lsndfile
+LDADD = -lsndfile
 
 subpkgdatadir = $(datadir)/guile/sound
 subpkgdata_DATA = *.scm
@@ -23,9 +23,7 @@ libguile_sndfile_la_LDFLAGS = $(LDADD)
 
 SUFFIXES = .i
 .i.c:
-	$(SWIG) $(SWIGFLAGS) \
-  -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
-  -o $@ $<
+	$(SWIG) $(SWIGFLAGS) -o $@ $<
 
 sndfile_inc.i: /usr/include/sndfile.h
 	$(CPP) $< | $(PP) $< > $@

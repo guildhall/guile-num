@@ -36,7 +36,8 @@
 # Code:
 
 # config
-subdirs_with_ltlibs="gsl lapack fftw sound"       # maintain me
+#subdirs_with_ltlibs="gsl lapack fftw"       # maintain me
+subdirs_with_ltlibs="gsl/libguile-gsl-blas.la lapack/libguile-lapack.la fftw/libguile-fftw.la"       # maintain me
 
 # env (set by configure)
 top_srcdir="@top_srcdir_absolute@"
@@ -52,26 +53,24 @@ top_builddir="@top_builddir_absolute@"
 
 # handle GUILE_LOAD_PATH (no clobber)
 if [ x"$GUILE_LOAD_PATH" = x ] ; then
-    GUILE_LOAD_PATH="${top_srcdir}"
+    GUILE_LOAD_PATH="${top_srcdir}/guile"
 else
     # This hair prevents double inclusion.
     # The ":" prevents prefix aliasing.
     case x"$GUILE_LOAD_PATH" in x*${top_srcdir}:*) ;;
-      *) GUILE_LOAD_PATH="${top_srcdir}:$GUILE_LOAD_PATH" ;;
+      *) GUILE_LOAD_PATH="${top_srcdir}/guile:$GUILE_LOAD_PATH" ;;
     esac
 fi
 export GUILE_LOAD_PATH
 
-# handle LTDL_LIBRARY_PATH (no clobber)
-ltdl_prefix=""
+## handle LTDL_LIBRARY_PATH (no clobber)
+libtool_options=""
 for dir in $subdirs_with_ltlibs ; do
-    ltdl_prefix="${top_builddir}/${dir}:${ltdl_prefix}"
+    libtool_options="-dlopen ${top_builddir}/${dir} ${libtool_options}"
 done
-LTDL_LIBRARY_PATH="${ltdl_prefix}$LTDL_LIBRARY_PATH"
-export LTDL_LIBRARY_PATH
 
 # do it
-exec $(which guile) "$@"
+exec libtool ${libtool_options} --mode=execute $(which guile) "$@"
 
 # never reached
 exit 1

@@ -6,13 +6,31 @@ AC_CONFIG_HEADERS
 
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
+AC_DISABLE_STATIC
 
-AC_PROG_CC
-AC_PROG_CPP
 AC_ISC_POSIX
+AC_PROG_CC
+AC_STDC_HEADERS
+AC_PROG_CPP
 AC_PROG_F77
 AC_F77_LIBRARY_LDFLAGS
 AC_PROG_LIBTOOL
+
+AC_MSG_CHECKING(for Guile)
+guile-config link > /dev/null || {
+ echo "configure: cannot find guile-config; is Guile installed?" 1>&2
+ exit 1
+}
+GUILE_VERSION=`guile-config info guileversion`
+if test "$GUILE_VERSION" \< 1.6.4; then
+  AC_MSG_ERROR([Guile 1.6.4 or newer is required, but you only have $GUILEVERSION.])
+fi
+GUILE_CFLAGS="`guile-config compile`"
+GUILE_LIBS="`guile-config link`"
+AC_SUBST(GUILE_CFLAGS)
+AC_SUBST(GUILE_LIBS)
+AC_MSG_RESULT(yes)
+
 
 CFLAGS="$CFLAGS `gsl-config --cflags`"
 LIBS="$LIBS `gsl-config --libs`"

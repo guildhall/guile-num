@@ -173,9 +173,6 @@ extern void fftwf_print_plan(const fftwf_plan p);
 extern void *fftwf_malloc(size_t n);
 extern void fftwf_free(void *p);
 extern void fftwf_flops(const fftwf_plan p, double *add, double *mul, double *fma);
-extern const char fftwf_version[];
-extern const char fftwf_cc[];
-extern const char fftwf_codelet_optim[];
 typedef long double fftwl_complex[2];
 typedef struct fftwl_plan_s *fftwl_plan;
 typedef struct fftw_iodim_do_not_use_me fftwl_iodim;
@@ -233,9 +230,6 @@ extern void fftwl_print_plan(const fftwl_plan p);
 extern void *fftwl_malloc(size_t n);
 extern void fftwl_free(void *p);
 extern void fftwl_flops(const fftwl_plan p, double *add, double *mul, double *fma);
-extern const char fftwl_version[];
-extern const char fftwl_cc[];
-extern const char fftwl_codelet_optim[];
 
 #define FFTW_FORWARD (-1)
 #define FFTW_BACKWARD (+1)
@@ -271,5 +265,5 @@ static void copy_fftw_complex_gsl_vector_complex(gsl_vector_complex *v, fftw_com
 
 %scheme %{
 (define my-so (dynamic-link "libguile-fftw.la"))
-(dynamic-call "SWIG_init" my-so)
+(dynamic-call "scm_init_fftw_fftw_module" my-so)
 %}

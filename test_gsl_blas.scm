@@ -1,4 +1,4 @@
-(use-modules (gsl gsl-blas)
+(use-modules (gsl blas)
 	     (ice-9 format))
 
 

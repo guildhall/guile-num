@@ -1,4 +1,4 @@
-(use-modules (gsl gsl-rng))
+(use-modules (gsl rng))
 
 ;;; (do ((i 0 (+ i 1)))
 ;;;     ((= i (gsl-rng-type-len)))

@@ -1,5 +1,5 @@
-(use-modules (gsl gsl-qrng))
-(use-modules (gsl gsl-vector))
+(use-modules (gsl qrng))
+(use-modules (gsl vector))
 
 (let ((q (gsl-qrng-alloc (gsl-qrng-sobol) 2))
       (v (gsl-vector-alloc 2)))

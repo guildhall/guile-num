@@ -1,9 +1,9 @@
 (use-modules (ice-9 format)
 	     (math array-fun)
-	     (gsl gsl-math)
-	     (gsl gsl-vector)
-	     (gsl gsl-rng)
-	     (gsl gsl-monte))
+	     (gsl math)
+	     (gsl vector)
+	     (gsl rng)
+	     (gsl monte))
 
 ;;; Computation of the integral,
 ;;;
