@@ -17,3 +17,4 @@ libtool
 config.status
 stamp-h
 Makefile
+autom4te.cache

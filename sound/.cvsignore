@@ -1,3 +1,5 @@
 *_wrap.c
 sndfile.scm
 Makefile.in
+Makefile
+.deps
