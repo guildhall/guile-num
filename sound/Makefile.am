@@ -20,4 +20,4 @@ SUFFIXES = .i
   -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
   -o $@ $<
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.scm
+MOSTLYCLEANFILES = $(BUILT_SOURCES) sndfile.scm
