@@ -21,6 +21,6 @@ extern int gsl_combination_fread (FILE * STREAM, gsl_combination * C);int gsl_co
 extern int gsl_combination_fscanf (FILE * STREAM, gsl_combination * C);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-combination.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-combination.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

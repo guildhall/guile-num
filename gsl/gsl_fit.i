@@ -20,6 +20,6 @@ extern int gsl_multifit_linear (const gsl_matrix * X, const gsl_vector * Y, gsl_
 extern int gsl_multifit_wlinear (const gsl_matrix * X, const gsl_vector * W, const gsl_vector * Y, gsl_vector * C, gsl_matrix * COV, double * OUTPUT, gsl_multifit_linear_workspace * WORK);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-fit.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-fit.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

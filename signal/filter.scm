@@ -19,18 +19,19 @@
 (define-module (signal filter)
   :use-module (ice-9 slib)
   :use-module (math array-fun)
-  :use-module (ice-9 syncase))
+;;  :use-module (ice-9 syncase)
+)
 
 (export make-fixed-iir-filter
 	make-adaptive-iir-filter
 	iir-filter)
 
-;;(require 'macro-by-example)
+(require 'macro-by-example)
 
 (define-syntax iterate-filter
   (syntax-rules 
    ()
-   ((iterate-filter len num den state)
+   ((_ len num den state)
     (case len
       ((0) (lambda (x)
 	     (* (uniform-vector-ref num 0) x)))
@@ -84,7 +85,7 @@ initial values @var{init}."
   (if (= (uniform-vector-ref den 0) 0.0)
       (error "filter: the first element of the denominator must be non-zero"))
   (let* ((len   (+ -1 (max (uniform-vector-length num)
-			  (uniform-vector-length den))))
+			   (uniform-vector-length den))))
 	 (state (if (null? init)
 		    (make-vector len 0.0)
 		    (car init)))
@@ -92,10 +93,9 @@ initial values @var{init}."
 	 (num   (array-map normalize (vector-resize num (+ len 1) 0.0)))
 	 (den   (array-map normalize (vector-resize den (+ len 1) 0.0))))
     (if (not (= len (uniform-vector-length state)))
-	(error "filter: si must be a vector of length max (length (a), length (b)) - 1"))
+	(error "filter: si must be a vector of length (+ -1 (max (length a) (length b)))"))
     (cond ((number? x)
 	   (values ((iterate-filter len num den state) x) state))
 	  ((vector? x)
 	   (values (array-map (iterate-filter len num den state) x) state))
 	  (else (error "Type mismatch")))))
-

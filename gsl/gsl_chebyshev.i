@@ -28,6 +28,6 @@ extern int gsl_cheb_calc_deriv (gsl_cheb_series * DERIV, const gsl_cheb_series *
 extern int gsl_cheb_calc_integ (gsl_cheb_series * INTEG, const gsl_cheb_series * CS);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-chebyshev.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-chebyshev.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

@@ -219,7 +219,7 @@ extern int gsl_blas_zher2k (CBLAS_UPLO_t UPLO,
              (gsl gsl-vector)
              (gsl gsl-matrix))
 
-(define my-so (dynamic-link "gsl/libguile-gsl-blas.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-blas.la"))
 (dynamic-call "SWIG_init" my-so)
 
 (export blas-dgemv

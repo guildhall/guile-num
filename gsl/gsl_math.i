@@ -172,7 +172,7 @@ extern gsl_complex gsl_complex_arccsch (gsl_complex Z);
 extern gsl_complex gsl_complex_arccoth (gsl_complex Z);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-math.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-math.la"))
 (dynamic-call "SWIG_init" my-so)
 
 (export complex->gsl-complex gsl-complex->complex)

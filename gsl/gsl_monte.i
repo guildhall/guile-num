@@ -172,7 +172,7 @@ extern void gsl_monte_vegas_free (gsl_monte_vegas_state* S);
 %}
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-monte.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-monte.la"))
 (dynamic-call "SWIG_init" my-so)
 
 (export gsl-monte-function-alloc gsl-monte-function-free)

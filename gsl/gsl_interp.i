@@ -48,6 +48,6 @@ extern double gsl_spline_eval_integ (const gsl_spline * SPLINE, double A, double
 extern int gsl_spline_eval_integ_e (const gsl_spline * SPLINE, double A, double B, gsl_interp_accel * ACC, double * OUTPUT);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-interp.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-interp.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

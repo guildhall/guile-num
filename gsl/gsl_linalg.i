@@ -72,6 +72,6 @@ extern int gsl_linalg_solve_symm_tridiag (const gsl_vector * DIAG, const gsl_vec
 extern int gsl_linalg_solve_symm_cyc_tridiag (const gsl_vector * DIAG, const gsl_vector * E, const gsl_vector * B, gsl_vector * X);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-linalg.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-linalg.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

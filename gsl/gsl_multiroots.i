@@ -277,7 +277,7 @@ void gsl_multiroot_function_eval_fdf(gsl_multiroot_function_fdf * f, const gsl_v
 
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-multiroots.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-multiroots.la"))
 (dynamic-call "SWIG_init" my-so)
 
 (export gsl-multiroot-function-alloc gsl-multiroot-function-free

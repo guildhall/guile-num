@@ -1,0 +1,20 @@
+AC_INIT("guile-numerics", "0.1.0")
+AM_INIT_AUTOMAKE
+AC_PREREQ(2.54)
+AC_CONFIG_SRCDIR("test_gsl_blas.scm")
+
+AM_CONFIG_HEADER(config.h)
+AM_MAINTAINER_MODE
+
+AC_PROG_CC
+AC_ISC_POSIX
+AC_PROG_F77
+AC_PROG_LIBTOOL
+
+CFLAGS="$CFLAGS `gsl-config --cflags`"
+LIBS="$LIBS `gsl-config --libs`"
+
+CFLAGS="$CFLAGS `guile-config compile`"
+LIBS="$LIBS `guile-config link`"
+
+AC_OUTPUT([Makefile finance/Makefile gsl/Makefile])

@@ -14,6 +14,6 @@ extern int gsl_diff_backward (const gsl_function *F, double X,
 			      double *OUTPUT, double *OUTPUT);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-diff.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-diff.la"))
 (dynamic-call "SWIG_init" my-so)
 %}

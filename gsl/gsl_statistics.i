@@ -52,6 +52,6 @@ extern double gsl_stats_median_from_sorted_data (const double SORTED_DATA[], siz
 extern double gsl_stats_quantile_from_sorted_data (const double SORTED_DATA[], size_t STRIDE, size_t N, double F);
 
 %scheme %{
-(define my-so (dynamic-link "gsl/libguile-gsl-statistics.so"))
+(define my-so (dynamic-link "gsl/libguile-gsl-statistics.la"))
 (dynamic-call "SWIG_init" my-so)
 %}
