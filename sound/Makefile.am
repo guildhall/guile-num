@@ -2,6 +2,9 @@ SWIG = swig
 SWIGFLAGS = -guile -c
 LDADD = -lswigguile -lsndfile
 
+subpkgdatadir = $(datadir)/guile/sound
+subpkgdata_DATA = *.scm
+
 SWIG_INTERFACES = \
 	sndfile.i
 

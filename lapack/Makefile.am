@@ -3,6 +3,9 @@ SWIGFLAGS = -guile -c
 LD = g77
 LDADD = -lswigguile @FLIBS@ -llapack -lblas2
 
+subpkgdatadir = $(datadir)/guile/lapack
+subpkgdata_DATA = *.scm
+
 SWIG_INTERFACES = \
 	lapack.i
 

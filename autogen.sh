@@ -1,7 +1,7 @@
 #! /bin/sh
 
 autoheader
-libtoolize
+libtoolize --force
 aclocal
 automake --add-missing
 autoconf

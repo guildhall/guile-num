@@ -1,1 +1,2 @@
-dist_pkgdata_DATA = dpcm.scm filter.scm sine-generator.scm vco.scm
+subpkgdatadir = $(datadir)/guile/signal
+subpkgdata_DATA = dpcm.scm filter.scm sine-generator.scm vco.scm

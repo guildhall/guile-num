@@ -2,6 +2,9 @@ SWIG = swig
 SWIGFLAGS = -guile -c
 LDADD = -lswigguile -lfftw
 
+subpkgdatadir = $(datadir)/guile/fftw
+subpkgdata_DATA = *.scm
+
 SWIG_INTERFACES = \
 	fftw.i
 

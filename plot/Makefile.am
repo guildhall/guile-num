@@ -1,1 +1,2 @@
-dist_pkgdata_DATA = gnuplot.scm
+subpkgdatadir = $(datadir)/guile/plot
+subpkgdata_DATA = gnuplot.scm
