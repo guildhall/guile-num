@@ -122,7 +122,7 @@ _wrap_gsl_odeiv_system_free (SCM s_0)
 
 %}
 
-%include "gsl_odeiv.inc"
+%include "gsl_odeiv_inc.i"
 
 %init %{
     gh_new_procedure("gsl-odeiv-system-alloc", (swig_guile_proc) _wrap_gsl_odeiv_system_alloc, 3, 0, 0);

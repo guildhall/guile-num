@@ -6,7 +6,7 @@
 #include <gsl/gsl_sum.h>
 %}
 
-%include "gsl_sum.inc"
+%include "gsl_sum_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-levin.la"))

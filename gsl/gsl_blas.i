@@ -4,7 +4,7 @@
 #include <gsl/gsl_blas.h>
 %}
 
-%include "gsl_blas.inc"
+%include "gsl_blas_inc.i"
 
 %scheme %{
 (use-modules (math array-fun)

@@ -4,7 +4,7 @@
 #include <gsl/gsl_eigen.h>
 %}
 
-%include "gsl_eigen.inc"
+%include "gsl_eigen_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-eigen.la"))

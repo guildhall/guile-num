@@ -6,7 +6,7 @@
 #include <gsl/gsl_integration.h>
 %}
 
-%include "gsl_integration.inc"
+%include "gsl_integration_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-integration.la"))

@@ -9,7 +9,7 @@
 #include <gsl/gsl_fft_real_float.h>
 %}
 
-%include "gsl_fft.inc"
+%include "gsl_fft_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-fft.la"))

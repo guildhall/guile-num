@@ -7,7 +7,7 @@
 #include <gsl/gsl_spline.h>
 %}
 
-%include "gsl_interp.inc"
+%include "gsl_interp_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-interp.la"))

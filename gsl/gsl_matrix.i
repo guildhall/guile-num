@@ -61,7 +61,7 @@ void gsl_matrix_complex_set_real_imag (gsl_matrix_complex * v,
 				       size_t i, size_t j,
 				       double re, double im);
 
-%include "gsl_matrix.inc"
+%include "gsl_matrix_inc.i"
 
 
 %scheme %{

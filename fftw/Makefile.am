@@ -20,7 +20,7 @@ libguile_fftw_la_LDFLAGS = $(LDADD)
 SUFFIXES = .i
 .i.c:
 	$(SWIG) $(SWIGFLAGS) \
-  -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
+  -scmstub $$(basename $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
   -o $@ $<
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.scm

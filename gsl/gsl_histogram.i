@@ -7,7 +7,7 @@
 
 %multiple_values;
 
-%include "gsl_histogram.inc"
+%include "gsl_histogram_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-histogram.la"))

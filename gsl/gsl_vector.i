@@ -76,7 +76,7 @@ double * gsl_vector_complex_data (gsl_vector_complex * v);
 void gsl_vector_complex_set_real_imag (gsl_vector_complex * v,
 				       size_t i, double re, double im);
 
-%include "gsl_vector.inc"
+%include "gsl_vector_inc.i"
 
 %scheme %{
 (use-modules (gsl gsl-math))

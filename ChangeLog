@@ -1,3 +1,10 @@
+2004-01-30  Arno Peters  <a.w.peters@ieee.org>
+
+	* configure.in: renamed to configure.ac
+
+	* gsl/gsl_*.i: Changed all automatically generated SWIG interface
+	files from *.inc to *_inc.i.
+
 2004-01-11  Arno Peters  <a.w.peters@ieee.org>
 
 	* gsl/gsl_*.i: Added automatic destillation from interface files.

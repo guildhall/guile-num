@@ -5,7 +5,7 @@
 #include <gsl/gsl_vector.h>
 %}
 
-%include "gsl_permute.inc"
+%include "gsl_permute_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-permute.la"))

@@ -4,7 +4,7 @@
 #include <gsl/gsl_linalg.h>
 %}
 
-%include "gsl_linalg.inc"
+%include "gsl_linalg_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-linalg.la"))

@@ -6,7 +6,7 @@
 #include <gsl/gsl_diff.h>
 %}
 
-%include <gsl_diff.inc>
+%include <gsl_diff_inc.i>
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-diff.la"))

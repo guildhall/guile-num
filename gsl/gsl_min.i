@@ -6,7 +6,7 @@
 #include <gsl/gsl_min.h>
 %}
 
-%include "gsl_min.inc"
+%include "gsl_min_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-min.la"))

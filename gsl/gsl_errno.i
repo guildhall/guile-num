@@ -8,7 +8,7 @@ gsl_error_handler_t *previous_error_handler;
 
 %}
 
-%include "gsl_errno.inc"
+%include "gsl_errno_inc.i"
 
 %wrapper %{
 void guile_gsl_error_handler (const char * reason, const char * file,

@@ -75,7 +75,7 @@ _wrap_gsl_monte_function_free (SCM s_0)
 
 %}
 
-%include "gsl_monte.inc"
+%include "gsl_monte_inc.i"
 
 %init %{
     gh_new_procedure("gsl-monte-function-alloc", (swig_guile_proc) _wrap_gsl_monte_function_alloc, 2, 0, 0);

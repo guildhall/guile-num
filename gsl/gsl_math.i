@@ -96,7 +96,7 @@ void gsl_set_complex (gsl_complex * ZP, double X, double Y);
 void gsl_set_real (gsl_complex * ZP, double X);
 void gsl_set_imag (gsl_complex * ZP, double Y);
 
-%include "gsl_math.inc"
+%include "gsl_math_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-math.la"))

@@ -1,6 +1,6 @@
 SWIG = swig
 SWIGFLAGS = -guile -c
-PP = ../destill.scm
+PP = $(top_srcdir)/destill.scm
 
 LDADD = -lswigguile -lgsl -lgslcblas -lguile
 
@@ -51,8 +51,9 @@ SWIG_INTERFACES =				\
 	gsl_function.i
 
 BUILT_SOURCES =					\
-	$(GSL_HEADERFILES:.h=.inc)		\
-	$(SWIG_INTERFACES:.i=.c)
+	$(GSL_HEADERFILES:.h=_inc.i)		\
+	$(SWIG_INTERFACES:.i=.c)		\
+	*.scm
 
 lib_LTLIBRARIES =				\
 	libguile-gsl-blas.la			\
@@ -169,133 +170,131 @@ libguile_gsl_vector_la_SOURCES = gsl_vector.c
 libguile_gsl_vector_la_LDFLAGS = $(LDADD)
 
 
-SUFFIXES = .i .inc
-%.c: %.i %.inc
-	$(SWIG) $(SWIGFLAGS) \
-  -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
-  -o $@ $<
-
+SUFFIXES = .i
 %.c: %.i
 	$(SWIG) $(SWIGFLAGS) \
-  -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
+  -scmstub $$(basename $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
   -o $@ $<
 
-gsl_blas.inc: /usr/include/gsl/gsl_blas.h
+gsl_blas_inc.i: /usr/include/gsl/gsl_blas.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_(c|)blas.*' > $@
 
-gsl_block.inc: /usr/include/gsl/gsl_block.h
+gsl_block_inc.i: /usr/include/gsl/gsl_block.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_block.*' > $@
 
-gsl_chebyshev.inc: /usr/include/gsl/gsl_chebyshev.h
+gsl_chebyshev_inc.i: /usr/include/gsl/gsl_chebyshev.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_chebyshev.*' > $@
 
-gsl_combination.inc: /usr/include/gsl/gsl_combination.h
+gsl_combination_inc.i: /usr/include/gsl/gsl_combination.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_combination.*' > $@
 
-gsl_dht.inc: /usr/include/gsl/gsl_dht.h
+gsl_dht_inc.i: /usr/include/gsl/gsl_dht.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_dht.*' > $@
 
-gsl_diff.inc: /usr/include/gsl/gsl_diff.h
-	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_diff.*' > $@
+gsl_diff_inc.i: /usr/include/gsl/gsl_diff.h
+	$(CPP) $^ | \
+	$(PP) '/usr/include/gsl/gsl_diff.*' | \
+	sed 's/result/OUTPUT/g;' | \
+	sed 's/abserr/OUTPUT/g;' > $@
 
-gsl_eigen.inc: /usr/include/gsl/gsl_eigen.h
+gsl_eigen_inc.i: /usr/include/gsl/gsl_eigen.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_eigen.*' > $@
 
-gsl_errno.inc: /usr/include/gsl/gsl_errno.h
+gsl_errno_inc.i: /usr/include/gsl/gsl_errno.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_errno.*' > $@
 
-gsl_fft.inc: /usr/include/gsl/gsl_fft_*.h
+gsl_fft_inc.i: /usr/include/gsl/gsl_fft_*.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_fft.*' > $@
 
-gsl_fit.inc: /usr/include/gsl/gsl_fit.h
+gsl_fit_inc.i: /usr/include/gsl/gsl_fit.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_fit.*' > $@
 
-gsl_histogram.inc: /usr/include/gsl/gsl_histogram.h
+gsl_histogram_inc.i: /usr/include/gsl/gsl_histogram.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_histogram.*' > $@
 
-gsl_histogram2d.inc: /usr/include/gsl/gsl_histogram2d.h
+gsl_histogram2d_inc.i: /usr/include/gsl/gsl_histogram2d.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_histogram2d.*' > $@
 
-gsl_integration.inc: /usr/include/gsl/gsl_integration.h
+gsl_integration_inc.i: /usr/include/gsl/gsl_integration.h
 	$(CPP) $^ | \
 	$(PP) '/usr/include/gsl/gsl_integration.*' | \
 	sed 's/result/OUTPUT/g;' | \
 	sed 's/abserr/OUTPUT/g;' > $@
 
-gsl_interp.inc: /usr/include/gsl/gsl_interp.h
+gsl_interp_inc.i: /usr/include/gsl/gsl_interp.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_interp.*' > $@
 
-gsl_linalg.inc: /usr/include/gsl/gsl_linalg.h
+gsl_linalg_inc.i: /usr/include/gsl/gsl_linalg.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_linalg.*' > $@
 
-gsl_math.inc: /usr/include/gsl/gsl_math.h /usr/include/gsl/gsl_complex_math.h
+gsl_math_inc.i: /usr/include/gsl/gsl_math.h /usr/include/gsl/gsl_complex_math.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_(complex_|)math.*' > $@
 
-gsl_matrix.inc: /usr/include/gsl/gsl_matrix.h
+gsl_matrix_inc.i: /usr/include/gsl/gsl_matrix.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_matrix.*' > $@
 
-gsl_min.inc: /usr/include/gsl/gsl_min.h
+gsl_min_inc.i: /usr/include/gsl/gsl_min.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_min.*' > $@
 
-gsl_monte.inc: /usr/include/gsl/gsl_monte*.h
+gsl_monte_inc.i: /usr/include/gsl/gsl_monte*.h
 	$(CPP) $^ | \
 	$(PP) '/usr/include/gsl/gsl_monte.*' | \
 	sed 's/double *\* *result/double *OUTPUT/g;' | \
 	sed 's/double *\* *abserr/double *OUTPUT/g;' > $@
 
-gsl_multifit.inc: /usr/include/gsl/gsl_multifit.h
+gsl_multifit_inc.i: /usr/include/gsl/gsl_multifit.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_multifit.*' > $@
 
-gsl_multimin.inc: /usr/include/gsl/gsl_multimin.h
+gsl_multimin_inc.i: /usr/include/gsl/gsl_multimin.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_multimin.*' > $@
 
-gsl_multiroots.inc: /usr/include/gsl/gsl_multiroots.h
+gsl_multiroots_inc.i: /usr/include/gsl/gsl_multiroots.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_multiroots.*' > $@
 
-gsl_odeiv.inc: /usr/include/gsl/gsl_odeiv.h
+gsl_odeiv_inc.i: /usr/include/gsl/gsl_odeiv.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_odeiv.*' > $@
 
-gsl_permute.inc: /usr/include/gsl/gsl_permute.h
+gsl_permute_inc.i: /usr/include/gsl/gsl_permute.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_permute.*' > $@
 
-gsl_poly.inc: /usr/include/gsl/gsl_poly.h
+gsl_poly_inc.i: /usr/include/gsl/gsl_poly.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_poly.*' > $@
 
-gsl_qrng.inc: /usr/include/gsl/gsl_qrng.h
+gsl_qrng_inc.i: /usr/include/gsl/gsl_qrng.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_qrng.*' > $@
 
-gsl_randist.inc: /usr/include/gsl/gsl_randist.h
+gsl_randist_inc.i: /usr/include/gsl/gsl_randist.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_randist.*' > $@
 
-gsl_rng.inc: /usr/include/gsl/gsl_rng.h
+gsl_rng_inc.i: /usr/include/gsl/gsl_rng.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_rng.*' > $@
 
-gsl_roots.inc: /usr/include/gsl/gsl_roots.h
+gsl_roots_inc.i: /usr/include/gsl/gsl_roots.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_roots.*' > $@
 
-gsl_sf.inc: /usr/include/gsl/gsl_sf.h
+gsl_sf_inc.i: /usr/include/gsl/gsl_sf.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_sf.*' > $@
 
-gsl_siman.inc: /usr/include/gsl/gsl_siman.h
+gsl_siman_inc.i: /usr/include/gsl/gsl_siman.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_siman.*' > $@
 
-gsl_sort.inc: /usr/include/gsl/gsl_sort.h
+gsl_sort_inc.i: /usr/include/gsl/gsl_sort.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_sort.*' > $@
 
-gsl_sort_vector.inc: /usr/include/gsl/gsl_sort_vector.h
+gsl_sort_vector_inc.i: /usr/include/gsl/gsl_sort_vector.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_sort_vector.*' > $@
 
-gsl_spline.inc: /usr/include/gsl/gsl_spline.h
+gsl_spline_inc.i: /usr/include/gsl/gsl_spline.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_spline.*' > $@
 
-gsl_sum.inc: /usr/include/gsl/gsl_sum.h
+gsl_sum_inc.i: /usr/include/gsl/gsl_sum.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_sum.*' > $@
 
-gsl_statistics.inc: /usr/include/gsl/gsl_statistics.h
+gsl_statistics_inc.i: /usr/include/gsl/gsl_statistics.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_statistics.*' > $@
 
-gsl_vector.inc: /usr/include/gsl/gsl_vector.h
+gsl_vector_inc.i: /usr/include/gsl/gsl_vector.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_vector.*' > $@
 
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.scm
+MOSTLYCLEANFILES = $(BUILT_SOURCES)

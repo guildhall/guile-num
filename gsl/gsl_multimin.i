@@ -126,7 +126,7 @@ void gsl_multimin_function_eval_fdf(gsl_multimin_function_fdf * f,
 
 %}
 
-%include "gsl_multimin.inc"
+%include "gsl_multimin_inc.i"
 
 double gsl_multimin_function_eval_f(gsl_multimin_function_fdf * f, const gsl_vector * x);
 void gsl_multimin_function_eval_df(gsl_multimin_function_fdf * f, const gsl_vector * x, gsl_vector * dy);

@@ -6,7 +6,7 @@
 
 %multiple_values;
 
-%include "gsl_statistics.inc"
+%include "gsl_statistics_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-statistics.la"))

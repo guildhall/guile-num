@@ -1,5 +1,7 @@
 SWIG = swig
 SWIGFLAGS = -guile -c
+PP = $(top_srcdir)/destill.scm
+
 LDADD = -lswigguile -lsndfile
 
 subpkgdatadir = $(datadir)/guile/sound
@@ -9,8 +11,9 @@ SWIG_INTERFACES = \
 	sndfile.i
 
 BUILT_SOURCES = \
-	sndfile.inc \
-	sndfile.c
+	sndfile_inc.i \
+	sndfile.c \
+	sndfile.scm
 
 lib_LTLIBRARIES = \
 	libguile-sndfile.la
@@ -18,13 +21,13 @@ lib_LTLIBRARIES = \
 libguile_sndfile_la_SOURCES =  sndfile.c
 libguile_sndfile_la_LDFLAGS = $(LDADD)
 
-SUFFIXES = .i .inc
+SUFFIXES = .i
 .i.c:
 	$(SWIG) $(SWIGFLAGS) \
   -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
   -o $@ $<
 
 sndfile.inc: /usr/include/sndfile.h
-	$(CPP) $< | ../destill.scm $< > $@
+	$(CPP) $< | $(PP) $< > $@
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) sndfile.scm

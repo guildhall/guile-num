@@ -6,7 +6,7 @@
 #include <gsl/gsl_multifit.h>
 %}
 
-%include "gsl_multifit.inc"
+%include "gsl_multifit_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-multifit.la"))

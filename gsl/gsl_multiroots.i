@@ -208,7 +208,7 @@ void gsl_multiroot_function_eval_f(gsl_multiroot_function_fdf * f, const gsl_vec
 void gsl_multiroot_function_eval_df(gsl_multiroot_function_fdf * f, const gsl_vector * x, gsl_matrix * dy);
 void gsl_multiroot_function_eval_fdf(gsl_multiroot_function_fdf * f, const gsl_vector * x, gsl_vector * y, gsl_matrix * dy);
 
-%include "gsl_multiroots.inc"
+%include "gsl_multiroots_inc.i"
 
 %init %{
     gh_new_procedure("gsl-multiroot-function-alloc", (swig_guile_proc) _wrap_gsl_multiroot_function_alloc, 2, 0, 0);

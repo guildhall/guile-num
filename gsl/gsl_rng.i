@@ -39,7 +39,7 @@ size_t gsl_rng_type_len(void);
 const gsl_rng_type * gsl_rng_type_ref(size_t i);
 const char * gsl_rng_type_name(const gsl_rng_type * T);
 
-%include "gsl_rng.inc"
+%include "gsl_rng_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-rng.la"))

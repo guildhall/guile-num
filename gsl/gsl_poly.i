@@ -4,7 +4,7 @@
 #include <gsl/gsl_poly.h>
 %}
 
-%include "gsl_poly.inc"
+%include "gsl_poly_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-poly.la"))

@@ -6,7 +6,7 @@
 #include <gsl/gsl_dht.h>
 %}
 
-%include "gsl_dht.inc"
+%include "gsl_dht_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-gsl-dht.la"))
