@@ -1,7 +1,16 @@
 2003-05-13  Arno Peters  <a.w.peters@ieee.org>
 
-	* sndfile/.cvsignore: Ignoreing more automatically generated
-	files.
+	* test_fftw.scm: Updated to fit the new interface.
+
+	* fftw/Makefile.am: Updated link information for fftw library.
+
+	* fftw/fftw.i: New FFTW3 interface.  Note that the float and long
+	double interface functions lack support functions to be fully
+	functional within Guile.
+
+	* fftw/fftw2.i: moved from fftw.i: wraps FFTW2 library.
+
+	* sndfile/.cvsignore: Ignoring more automatically generated files.
 
 	* fftw/.cvsignore: Ignoring more automatically generated files.
 
