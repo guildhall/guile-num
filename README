@@ -1,0 +1,12 @@
+The guile-numerics package contains SWIG wrappers for the GNU
+Scientific Library and LAPACK.
+
+Dependencies:
+* Guile 1.4
+* SWIG 1.3.14
+* GSL 1.2
+* ATLAS (Automatically Tuned BLAS) 3.2
+* LAPACK 3.0
+* gcc
+* g77 (for properly linking LAPACK)
+

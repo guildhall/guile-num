@@ -1,0 +1,40 @@
+(use-modules (gsl gsl-function))
+(use-modules (gsl gsl-minimize))
+(use-modules (gsl gsl-math))
+(use-modules (gsl gsl-errno))
+(use-modules (ice-9 format))
+
+(define (cout . args)
+  (apply format (current-output-port) args))
+
+(define (f x)
+  (+ 1.0 (cos x)))
+
+(let ((max-iter 100)
+      (x-lo 0.0)
+      (x-hi 6.0)
+      (m 2.0)
+      (expected (gsl-pi)))
+    (let ((F (gsl-function-alloc f))
+	  (s (gsl-min-fminimizer-alloc (gsl-min-fminimizer-brent))))
+      (gsl-min-fminimizer-set s F m x-lo x-hi)
+
+      (cout "using ~A method\n" (gsl-min-fminimizer-name s))
+      (cout "~5A [~9A, ~9A] ~9A ~10A ~9A\n"
+	    "iter" "lower" "upper" "root" "err" "err(est)")
+
+      (let loop ((iter 1))
+	(gsl-min-fminimizer-iterate s)
+	(set! m (gsl-min-fminimizer-x-minimum s))
+	(let* ((x-lo (gsl-min-fminimizer-x-lower s))
+	       (x-hi (gsl-min-fminimizer-x-upper s))
+	       (status (gsl-min-test-interval x-lo x-hi 0.001 0.0)))
+	  (if (= status (GSL-SUCCESS))
+	      (cout "Converged:\n"))
+	  (cout "~5D [~9F, ~9F] ~9F ~+10F ~9F\n"
+		iter x-lo x-hi m (- m expected) (- x-hi x-lo))
+	  (if (and (= status (GSL-CONTINUE))
+		   (< iter max-iter))
+	      (loop (+ iter 1)))))
+      (gsl-min-fminimizer-free s)
+      (gsl-function-free F)))
