@@ -2,7 +2,7 @@ SWIG = swig
 SWIGFLAGS = -guile -scmstub -Linkage module -outdir ..
 PP = $(top_srcdir)/destill.scm
 
-CFLAGS = $(GUILE_CFLAGS)
+AM_CFLAGS = $(GUILE_CFLAGS)
 LDADD = -lgsl -lgslcblas $(GUILE_LIBS)
 
 subpkgdatadir = $(datadir)/guile/gsl
