@@ -1,424 +1,273 @@
 %module "fftw/fftw"
 
+/*
+ * Copyright (c) 2003 Matteo Frigo
+ * Copyright (c) 2003 Massachusetts Institute of Technology
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
+
 %{
-#include <fftw.h>
-#include <rfftw.h>
+#include <fftw3.h>
 #include <gsl/gsl_complex.h>
 #include <gsl/gsl_vector.h>
 
-static fftw_complex* gsl_vector_complex_fftw_complex(gsl_vector_complex *v)
+static fftw_complex* fftw_vector_alloc(size_t n)
 {
-	return (fftw_complex *) v->data;
+	return fftw_malloc(sizeof(fftw_complex) * n);
 }
+			
+
+static void copy_gsl_vector_complex_fftw_complex(fftw_complex *w, gsl_vector_complex *v)
+{
+	memcpy(w, v->data, sizeof(fftw_complex) * v->size);
+}
+
+static void copy_fftw_complex_gsl_vector_complex(gsl_vector_complex *v, fftw_complex *w)
+{
+	memcpy(v->data, w, sizeof(fftw_complex) * v->size);
+}
+
 
 %}
 
-typedef double fftw_real;
-
-typedef struct {
-     fftw_real re, im;
-} fftw_complex;
-
-#define c_re(c)  ((c).re)
-#define c_im(c)  ((c).im)
-
-typedef enum {
-     FFTW_FORWARD = -1, FFTW_BACKWARD = 1
-} fftw_direction;
-
-typedef enum {
-     FFTW_SUCCESS = 0, FFTW_FAILURE = -1
-} fftw_status;
-
-typedef void (fftw_notw_codelet) 
-     (const fftw_complex *, fftw_complex *, int, int);
-typedef void (fftw_twiddle_codelet)
-     (fftw_complex *, const fftw_complex *, int,
-      int, int);
-typedef void (fftw_generic_codelet) 
-     (fftw_complex *, const fftw_complex *, int,
-      int, int, int);
-typedef void (fftw_real2hc_codelet)
-     (const fftw_real *, fftw_real *, fftw_real *,
-      int, int, int);
-typedef void (fftw_hc2real_codelet)
-     (const fftw_real *, const fftw_real *,
-      fftw_real *, int, int, int);
-typedef void (fftw_hc2hc_codelet)
-     (fftw_real *, const fftw_complex *,
-      int, int, int);
-typedef void (fftw_rgeneric_codelet)
-     (fftw_real *, const fftw_complex *, int,
-      int, int, int);
-
-enum fftw_node_type {
-     FFTW_NOTW, FFTW_TWIDDLE, FFTW_GENERIC, FFTW_RADER,
-     FFTW_REAL2HC, FFTW_HC2REAL, FFTW_HC2HC, FFTW_RGENERIC
+enum fftw_r2r_kind_do_not_use_me {
+     FFTW_R2HC=0, FFTW_HC2R=1, FFTW_DHT=2,
+     FFTW_REDFT00=3, FFTW_REDFT01=4, FFTW_REDFT10=5, FFTW_REDFT11=6,
+     FFTW_RODFT00=7, FFTW_RODFT01=8, FFTW_RODFT10=9, FFTW_RODFT11=10
 };
 
-/* description of a codelet */
-typedef struct {
-     const char *name;		/* name of the codelet */
-     void (*codelet) ();	/* pointer to the codelet itself */
-     int size;			/* size of the codelet */
-     fftw_direction dir;	/* direction */
-     enum fftw_node_type type;	/* TWIDDLE or NO_TWIDDLE */
-     int signature;		/* unique id */
-     int ntwiddle;		/* number of twiddle factors */
-     const int *twiddle_order;	/* 
-				 * array that determines the order 
-				 * in which the codelet expects
-				 * the twiddle factors
-				 */
-} fftw_codelet_desc;
-
-/* On Win32, you need to do funny things to access global variables
-   in shared libraries.  Thanks to Andrew Sterian for this hack. */
-#ifdef HAVE_WIN32
-#  if defined(BUILD_FFTW_DLL)
-#    define DL_IMPORT(type) __declspec(dllexport) type
-#  elif defined(USE_FFTW_DLL)
-#    define DL_IMPORT(type) __declspec(dllimport) type
-#  else
-#    define DL_IMPORT(type) type
-#  endif
-#else
-#  define DL_IMPORT(type) type
-#endif
-
-extern DL_IMPORT(const char *) fftw_version;
-
-/*****************************
- *        Plans
- *****************************/
-/*
- * A plan is a sequence of reductions to compute a FFT of
- * a given size.  At each step, the FFT algorithm can:
- *
- * 1) apply a notw codelet, or
- * 2) recurse and apply a twiddle codelet, or
- * 3) apply the generic codelet.
- */
-
-/* structure that contains twiddle factors */
-typedef struct fftw_twiddle_struct {
+struct fftw_iodim_do_not_use_me {
      int n;
-     const fftw_codelet_desc *cdesc;
-     fftw_complex *twarray;
-     struct fftw_twiddle_struct *next;
-     int refcnt;
-} fftw_twiddle;
-
-typedef struct fftw_rader_data_struct {
-     struct fftw_plan_struct *plan;
-     fftw_complex *omega;
-     int g, ginv;
-     int p, flags, refcount;
-     struct fftw_rader_data_struct *next;
-     fftw_codelet_desc *cdesc;
-} fftw_rader_data;
-
-typedef void (fftw_rader_codelet) 
-     (fftw_complex *, const fftw_complex *, int,
-      int, int, fftw_rader_data *);
-
-/* structure that holds all the data needed for a given step */
-typedef struct fftw_plan_node_struct {
-     enum fftw_node_type type;
-
-     union {
-	  /* nodes of type FFTW_NOTW */
-	  struct {
-	       int size;
-	       fftw_notw_codelet *codelet;
-	       const fftw_codelet_desc *codelet_desc;
-	  } notw;
-
-	  /* nodes of type FFTW_TWIDDLE */
-	  struct {
-	       int size;
-	       fftw_twiddle_codelet *codelet;
-	       fftw_twiddle *tw;
-	       struct fftw_plan_node_struct *recurse;
-	       const fftw_codelet_desc *codelet_desc;
-	  } twiddle;
-
-	  /* nodes of type FFTW_GENERIC */
-	  struct {
-	       int size;
-	       fftw_generic_codelet *codelet;
-	       fftw_twiddle *tw;
-	       struct fftw_plan_node_struct *recurse;
-	  } generic;
-
-	  /* nodes of type FFTW_RADER */
-	  struct {
-	       int size;
-	       fftw_rader_codelet *codelet;
-	       fftw_rader_data *rader_data;
-	       fftw_twiddle *tw;
-	       struct fftw_plan_node_struct *recurse;
-	  } rader;
-
-	  /* nodes of type FFTW_REAL2HC */
-	  struct {
-	       int size;
-	       fftw_real2hc_codelet *codelet;
-	       const fftw_codelet_desc *codelet_desc;
-	  } real2hc;
-
-	  /* nodes of type FFTW_HC2REAL */
-	  struct {
-	       int size;
-	       fftw_hc2real_codelet *codelet;
-	       const fftw_codelet_desc *codelet_desc;
-	  } hc2real;
-
-	  /* nodes of type FFTW_HC2HC */
-	  struct {
-	       int size;
-	       fftw_direction dir;
-	       fftw_hc2hc_codelet *codelet;
-	       fftw_twiddle *tw;
-	       struct fftw_plan_node_struct *recurse;
-	       const fftw_codelet_desc *codelet_desc;
-	  } hc2hc;
-
-	  /* nodes of type FFTW_RGENERIC */
-	  struct {
-	       int size;
-	       fftw_direction dir;
-	       fftw_rgeneric_codelet *codelet;
-	       fftw_twiddle *tw;
-	       struct fftw_plan_node_struct *recurse;
-	  } rgeneric;
-     } nodeu;
-
-     int refcnt;
-} fftw_plan_node;
-
-typedef enum {
-     FFTW_NORMAL_RECURSE = 0,
-     FFTW_VECTOR_RECURSE = 1
-} fftw_recurse_kind;
-
-struct fftw_plan_struct {
-     int n;
-     int refcnt;
-     fftw_direction dir;
-     int flags;
-     int wisdom_signature;
-     enum fftw_node_type wisdom_type;
-     struct fftw_plan_struct *next;
-     fftw_plan_node *root;
-     double cost;
-     fftw_recurse_kind recurse_kind;
-     int vector_size;
+     int is;
+     int os;
 };
 
-typedef struct fftw_plan_struct *fftw_plan;
-
-/* flags for the planner */
-#define  FFTW_ESTIMATE (0)
-#define  FFTW_MEASURE  (1)
-
-#define FFTW_OUT_OF_PLACE (0)
-#define FFTW_IN_PLACE (8)
-#define FFTW_USE_WISDOM (16)
-
-#define FFTW_THREADSAFE (128)  /* guarantee plan is read-only so that the
-				  same plan can be used in parallel by
-				  multiple threads */
-
-#define FFTWND_FORCE_BUFFERED (256)     /* internal flag, forces buffering
-                                           in fftwnd transforms */
-
-#define FFTW_NO_VECTOR_RECURSE (512)    /* internal flag, prevents use
-                                           of vector recursion */
-
-extern fftw_plan fftw_create_plan_specific(int n, fftw_direction dir,
-					   int flags,
-					   fftw_complex *in, int istride,
-					 fftw_complex *out, int ostride);
-#define FFTW_HAS_PLAN_SPECIFIC
-extern fftw_plan fftw_create_plan(int n, fftw_direction dir, int flags);
-extern void fftw_print_plan(fftw_plan plan);
-extern void fftw_destroy_plan(fftw_plan plan);
-extern void fftw(fftw_plan plan, int howmany, fftw_complex *in, int istride,
-		 int idist, fftw_complex *out, int ostride, int odist);
-extern void fftw_one(fftw_plan plan, fftw_complex *in, fftw_complex *out);
-extern void fftw_die(const char *s);
+typedef double fftw_complex[2];
+typedef struct fftw_plan_s *fftw_plan;
+typedef struct fftw_iodim_do_not_use_me fftw_iodim;
+typedef enum fftw_r2r_kind_do_not_use_me fftw_r2r_kind;
+extern void fftw_execute(const fftw_plan p);
+extern fftw_plan fftw_plan_dft(int rank, const int *n, fftw_complex *in, fftw_complex *out, int sign, unsigned flags);
+extern fftw_plan fftw_plan_dft_1d(int n, fftw_complex *in, fftw_complex *out, int sign, unsigned flags);
+extern fftw_plan fftw_plan_dft_2d(int nx, int ny, fftw_complex *in, fftw_complex *out, int sign, unsigned flags);
+extern fftw_plan fftw_plan_dft_3d(int nx, int ny, int nz, fftw_complex *in, fftw_complex *out, int sign, unsigned flags);
+extern fftw_plan fftw_plan_many_dft(int rank, const int *n, int howmany, fftw_complex *in, const int *inembed, int istride, int idist, fftw_complex *out, const int *onembed, int ostride, int odist, int sign, unsigned flags);
+extern fftw_plan fftw_plan_guru_dft(int rank, const fftw_iodim *dims, int howmany_rank, const fftw_iodim *howmany_dims, fftw_complex *in, fftw_complex *out, int sign, unsigned flags);
+extern fftw_plan fftw_plan_guru_split_dft(int rank, const fftw_iodim *dims, int howmany_rank, const fftw_iodim *howmany_dims, double *ri, double *ii, double *ro, double *io, unsigned flags);
+extern void fftw_execute_dft(const fftw_plan p, fftw_complex *in, fftw_complex *out);
+extern void fftw_execute_split_dft(const fftw_plan p, double *ri, double *ii, double *ro, double *io);
+extern fftw_plan fftw_plan_many_dft_r2c(int rank, const int *n, int howmany, double *in, const int *inembed, int istride, int idist, fftw_complex *out, const int *onembed, int ostride, int odist, unsigned flags);
+extern fftw_plan fftw_plan_dft_r2c(int rank, const int *n, double *in, fftw_complex *out, unsigned flags);
+extern fftw_plan fftw_plan_dft_r2c_1d(int n,double *in,fftw_complex *out,unsigned flags);
+extern fftw_plan fftw_plan_dft_r2c_2d(int nx, int ny, double *in, fftw_complex *out, unsigned flags);
+extern fftw_plan fftw_plan_dft_r2c_3d(int nx, int ny, int nz, double *in, fftw_complex *out, unsigned flags);
+extern fftw_plan fftw_plan_many_dft_c2r(int rank, const int *n, int howmany, fftw_complex *in, const int *inembed, int istride, int idist, double *out, const int *onembed, int ostride, int odist, unsigned flags);
+extern fftw_plan fftw_plan_dft_c2r(int rank, const int *n, fftw_complex *in, double *out, unsigned flags);
+extern fftw_plan fftw_plan_dft_c2r_1d(int n,fftw_complex *in,double *out,unsigned flags);
+extern fftw_plan fftw_plan_dft_c2r_2d(int nx, int ny, fftw_complex *in, double *out, unsigned flags);
+extern fftw_plan fftw_plan_dft_c2r_3d(int nx, int ny, int nz, fftw_complex *in, double *out, unsigned flags);
+extern fftw_plan fftw_plan_guru_dft_r2c(int rank, const fftw_iodim *dims, int howmany_rank, const fftw_iodim *howmany_dims, double *in, fftw_complex *out, unsigned flags);
+extern fftw_plan fftw_plan_guru_dft_c2r(int rank, const fftw_iodim *dims, int howmany_rank, const fftw_iodim *howmany_dims, fftw_complex *in, double *out, unsigned flags);
+extern fftw_plan fftw_plan_guru_split_dft_r2c(int rank, const fftw_iodim *dims, int howmany_rank, const fftw_iodim *howmany_dims, double *in, double *ro, double *io, unsigned flags);
+extern fftw_plan fftw_plan_guru_split_dft_c2r(int rank, const fftw_iodim *dims, int howmany_rank, const fftw_iodim *howmany_dims, double *ri, double *ii, double *out, unsigned flags);
+extern void fftw_execute_dft_r2c(const fftw_plan p, double *in, fftw_complex *out);
+extern void fftw_execute_dft_c2r(const fftw_plan p, fftw_complex *in, double *out);
+extern void fftw_execute_split_dft_r2c(const fftw_plan p, double *in, double *ro, double *io);
+extern void fftw_execute_split_dft_c2r(const fftw_plan p, double *ri, double *ii, double *out);
+extern fftw_plan fftw_plan_many_r2r(int rank, const int *n, int howmany, double *in, const int *inembed, int istride, int idist, double *out, const int *onembed, int ostride, int odist, const fftw_r2r_kind *kind, unsigned flags);
+extern fftw_plan fftw_plan_r2r(int rank, const int *n, double *in, double *out, const fftw_r2r_kind *kind, unsigned flags);
+extern fftw_plan fftw_plan_r2r_1d(int n, double *in, double *out, fftw_r2r_kind kind, unsigned flags);
+extern fftw_plan fftw_plan_r2r_2d(int nx, int ny, double *in, double *out, fftw_r2r_kind kindx, fftw_r2r_kind kindy, unsigned flags);
+extern fftw_plan fftw_plan_r2r_3d(int nx, int ny, int nz, double *in, double *out, fftw_r2r_kind kindx, fftw_r2r_kind kindy, fftw_r2r_kind kindz, unsigned flags);
+extern fftw_plan fftw_plan_guru_r2r(int rank, const fftw_iodim *dims, int howmany_rank, const fftw_iodim *howmany_dims, double *in, double *out, const fftw_r2r_kind *kind, unsigned flags);
+extern void fftw_execute_r2r(const fftw_plan p, double *in, double *out);
+extern void fftw_destroy_plan(fftw_plan p);
+extern void fftw_forget_wisdom(void);
+extern void fftw_cleanup(void);
+extern void fftw_plan_with_nthreads(int nthreads);
+extern int fftw_init_threads(void);
+extern void fftw_cleanup_threads(void);
+extern void fftw_export_wisdom_to_file(FILE *output_file);
+extern char *fftw_export_wisdom_to_string(void);
+extern void fftw_export_wisdom(void (*write_char)(char c, void *), void *data);
+extern int fftw_import_system_wisdom(void);
+extern int fftw_import_wisdom_from_file(FILE *input_file);
+extern int fftw_import_wisdom_from_string(const char *input_string);
+extern int fftw_import_wisdom(int (*read_char)(void *), void *data);
+extern void fftw_fprint_plan(const fftw_plan p, FILE *output_file);
+extern void fftw_print_plan(const fftw_plan p);
 extern void *fftw_malloc(size_t n);
 extern void fftw_free(void *p);
-extern void fftw_check_memory_leaks(void);
-extern void fftw_print_max_memory_usage(void);
+extern void fftw_flops(const fftw_plan p, double *add, double *mul, double *fma);
+extern const char fftw_version[];
+extern const char fftw_cc[];
+extern const char fftw_codelet_optim[];
+typedef float fftwf_complex[2];
+typedef struct fftwf_plan_s *fftwf_plan;
+typedef struct fftw_iodim_do_not_use_me fftwf_iodim;
+typedef enum fftw_r2r_kind_do_not_use_me fftwf_r2r_kind;
+extern void fftwf_execute(const fftwf_plan p);
+extern fftwf_plan fftwf_plan_dft(int rank, const int *n, fftwf_complex *in, fftwf_complex *out, int sign, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_1d(int n, fftwf_complex *in, fftwf_complex *out, int sign, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_2d(int nx, int ny, fftwf_complex *in, fftwf_complex *out, int sign, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_3d(int nx, int ny, int nz, fftwf_complex *in, fftwf_complex *out, int sign, unsigned flags);
+extern fftwf_plan fftwf_plan_many_dft(int rank, const int *n, int howmany, fftwf_complex *in, const int *inembed, int istride, int idist, fftwf_complex *out, const int *onembed, int ostride, int odist, int sign, unsigned flags);
+extern fftwf_plan fftwf_plan_guru_dft(int rank, const fftwf_iodim *dims, int howmany_rank, const fftwf_iodim *howmany_dims, fftwf_complex *in, fftwf_complex *out, int sign, unsigned flags);
+extern fftwf_plan fftwf_plan_guru_split_dft(int rank, const fftwf_iodim *dims, int howmany_rank, const fftwf_iodim *howmany_dims, float *ri, float *ii, float *ro, float *io, unsigned flags);
+extern void fftwf_execute_dft(const fftwf_plan p, fftwf_complex *in, fftwf_complex *out);
+extern void fftwf_execute_split_dft(const fftwf_plan p, float *ri, float *ii, float *ro, float *io);
+extern fftwf_plan fftwf_plan_many_dft_r2c(int rank, const int *n, int howmany, float *in, const int *inembed, int istride, int idist, fftwf_complex *out, const int *onembed, int ostride, int odist, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_r2c(int rank, const int *n, float *in, fftwf_complex *out, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_r2c_1d(int n,float *in,fftwf_complex *out,unsigned flags);
+extern fftwf_plan fftwf_plan_dft_r2c_2d(int nx, int ny, float *in, fftwf_complex *out, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_r2c_3d(int nx, int ny, int nz, float *in, fftwf_complex *out, unsigned flags);
+extern fftwf_plan fftwf_plan_many_dft_c2r(int rank, const int *n, int howmany, fftwf_complex *in, const int *inembed, int istride, int idist, float *out, const int *onembed, int ostride, int odist, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_c2r(int rank, const int *n, fftwf_complex *in, float *out, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_c2r_1d(int n,fftwf_complex *in,float *out,unsigned flags);
+extern fftwf_plan fftwf_plan_dft_c2r_2d(int nx, int ny, fftwf_complex *in, float *out, unsigned flags);
+extern fftwf_plan fftwf_plan_dft_c2r_3d(int nx, int ny, int nz, fftwf_complex *in, float *out, unsigned flags);
+extern fftwf_plan fftwf_plan_guru_dft_r2c(int rank, const fftwf_iodim *dims, int howmany_rank, const fftwf_iodim *howmany_dims, float *in, fftwf_complex *out, unsigned flags);
+extern fftwf_plan fftwf_plan_guru_dft_c2r(int rank, const fftwf_iodim *dims, int howmany_rank, const fftwf_iodim *howmany_dims, fftwf_complex *in, float *out, unsigned flags);
+extern fftwf_plan fftwf_plan_guru_split_dft_r2c(int rank, const fftwf_iodim *dims, int howmany_rank, const fftwf_iodim *howmany_dims, float *in, float *ro, float *io, unsigned flags);
+extern fftwf_plan fftwf_plan_guru_split_dft_c2r(int rank, const fftwf_iodim *dims, int howmany_rank, const fftwf_iodim *howmany_dims, float *ri, float *ii, float *out, unsigned flags);
+extern void fftwf_execute_dft_r2c(const fftwf_plan p, float *in, fftwf_complex *out);
+extern void fftwf_execute_dft_c2r(const fftwf_plan p, fftwf_complex *in, float *out);
+extern void fftwf_execute_split_dft_r2c(const fftwf_plan p, float *in, float *ro, float *io);
+extern void fftwf_execute_split_dft_c2r(const fftwf_plan p, float *ri, float *ii, float *out);
+extern fftwf_plan fftwf_plan_many_r2r(int rank, const int *n, int howmany, float *in, const int *inembed, int istride, int idist, float *out, const int *onembed, int ostride, int odist, const fftwf_r2r_kind *kind, unsigned flags);
+extern fftwf_plan fftwf_plan_r2r(int rank, const int *n, float *in, float *out, const fftwf_r2r_kind *kind, unsigned flags);
+extern fftwf_plan fftwf_plan_r2r_1d(int n, float *in, float *out, fftwf_r2r_kind kind, unsigned flags);
+extern fftwf_plan fftwf_plan_r2r_2d(int nx, int ny, float *in, float *out, fftwf_r2r_kind kindx, fftwf_r2r_kind kindy, unsigned flags);
+extern fftwf_plan fftwf_plan_r2r_3d(int nx, int ny, int nz, float *in, float *out, fftwf_r2r_kind kindx, fftwf_r2r_kind kindy, fftwf_r2r_kind kindz, unsigned flags);
+extern fftwf_plan fftwf_plan_guru_r2r(int rank, const fftwf_iodim *dims, int howmany_rank, const fftwf_iodim *howmany_dims, float *in, float *out, const fftwf_r2r_kind *kind, unsigned flags);
+extern void fftwf_execute_r2r(const fftwf_plan p, float *in, float *out);
+extern void fftwf_destroy_plan(fftwf_plan p);
+extern void fftwf_forget_wisdom(void);
+extern void fftwf_cleanup(void);
+extern void fftwf_plan_with_nthreads(int nthreads);
+extern int fftwf_init_threads(void);
+extern void fftwf_cleanup_threads(void);
+extern void fftwf_export_wisdom_to_file(FILE *output_file);
+extern char *fftwf_export_wisdom_to_string(void);
+extern void fftwf_export_wisdom(void (*write_char)(char c, void *), void *data);
+extern int fftwf_import_system_wisdom(void);
+extern int fftwf_import_wisdom_from_file(FILE *input_file);
+extern int fftwf_import_wisdom_from_string(const char *input_string);
+extern int fftwf_import_wisdom(int (*read_char)(void *), void *data);
+extern void fftwf_fprint_plan(const fftwf_plan p, FILE *output_file);
+extern void fftwf_print_plan(const fftwf_plan p);
+extern void *fftwf_malloc(size_t n);
+extern void fftwf_free(void *p);
+extern void fftwf_flops(const fftwf_plan p, double *add, double *mul, double *fma);
+extern const char fftwf_version[];
+extern const char fftwf_cc[];
+extern const char fftwf_codelet_optim[];
+typedef long double fftwl_complex[2];
+typedef struct fftwl_plan_s *fftwl_plan;
+typedef struct fftw_iodim_do_not_use_me fftwl_iodim;
+typedef enum fftw_r2r_kind_do_not_use_me fftwl_r2r_kind;
+extern void fftwl_execute(const fftwl_plan p);
+extern fftwl_plan fftwl_plan_dft(int rank, const int *n, fftwl_complex *in, fftwl_complex *out, int sign, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_1d(int n, fftwl_complex *in, fftwl_complex *out, int sign, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_2d(int nx, int ny, fftwl_complex *in, fftwl_complex *out, int sign, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_3d(int nx, int ny, int nz, fftwl_complex *in, fftwl_complex *out, int sign, unsigned flags);
+extern fftwl_plan fftwl_plan_many_dft(int rank, const int *n, int howmany, fftwl_complex *in, const int *inembed, int istride, int idist, fftwl_complex *out, const int *onembed, int ostride, int odist, int sign, unsigned flags);
+extern fftwl_plan fftwl_plan_guru_dft(int rank, const fftwl_iodim *dims, int howmany_rank, const fftwl_iodim *howmany_dims, fftwl_complex *in, fftwl_complex *out, int sign, unsigned flags);
+extern fftwl_plan fftwl_plan_guru_split_dft(int rank, const fftwl_iodim *dims, int howmany_rank, const fftwl_iodim *howmany_dims, long double *ri, long double *ii, long double *ro, long double *io, unsigned flags);
+extern void fftwl_execute_dft(const fftwl_plan p, fftwl_complex *in, fftwl_complex *out);
+extern void fftwl_execute_split_dft(const fftwl_plan p, long double *ri, long double *ii, long double *ro, long double *io);
+extern fftwl_plan fftwl_plan_many_dft_r2c(int rank, const int *n, int howmany, long double *in, const int *inembed, int istride, int idist, fftwl_complex *out, const int *onembed, int ostride, int odist, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_r2c(int rank, const int *n, long double *in, fftwl_complex *out, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_r2c_1d(int n,long double *in,fftwl_complex *out,unsigned flags);
+extern fftwl_plan fftwl_plan_dft_r2c_2d(int nx, int ny, long double *in, fftwl_complex *out, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_r2c_3d(int nx, int ny, int nz, long double *in, fftwl_complex *out, unsigned flags);
+extern fftwl_plan fftwl_plan_many_dft_c2r(int rank, const int *n, int howmany, fftwl_complex *in, const int *inembed, int istride, int idist, long double *out, const int *onembed, int ostride, int odist, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_c2r(int rank, const int *n, fftwl_complex *in, long double *out, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_c2r_1d(int n,fftwl_complex *in,long double *out,unsigned flags);
+extern fftwl_plan fftwl_plan_dft_c2r_2d(int nx, int ny, fftwl_complex *in, long double *out, unsigned flags);
+extern fftwl_plan fftwl_plan_dft_c2r_3d(int nx, int ny, int nz, fftwl_complex *in, long double *out, unsigned flags);
+extern fftwl_plan fftwl_plan_guru_dft_r2c(int rank, const fftwl_iodim *dims, int howmany_rank, const fftwl_iodim *howmany_dims, long double *in, fftwl_complex *out, unsigned flags);
+extern fftwl_plan fftwl_plan_guru_dft_c2r(int rank, const fftwl_iodim *dims, int howmany_rank, const fftwl_iodim *howmany_dims, fftwl_complex *in, long double *out, unsigned flags);
+extern fftwl_plan fftwl_plan_guru_split_dft_r2c(int rank, const fftwl_iodim *dims, int howmany_rank, const fftwl_iodim *howmany_dims, long double *in, long double *ro, long double *io, unsigned flags);
+extern fftwl_plan fftwl_plan_guru_split_dft_c2r(int rank, const fftwl_iodim *dims, int howmany_rank, const fftwl_iodim *howmany_dims, long double *ri, long double *ii, long double *out, unsigned flags);
+extern void fftwl_execute_dft_r2c(const fftwl_plan p, long double *in, fftwl_complex *out);
+extern void fftwl_execute_dft_c2r(const fftwl_plan p, fftwl_complex *in, long double *out);
+extern void fftwl_execute_split_dft_r2c(const fftwl_plan p, long double *in, long double *ro, long double *io);
+extern void fftwl_execute_split_dft_c2r(const fftwl_plan p, long double *ri, long double *ii, long double *out);
+extern fftwl_plan fftwl_plan_many_r2r(int rank, const int *n, int howmany, long double *in, const int *inembed, int istride, int idist, long double *out, const int *onembed, int ostride, int odist, const fftwl_r2r_kind *kind, unsigned flags);
+extern fftwl_plan fftwl_plan_r2r(int rank, const int *n, long double *in, long double *out, const fftwl_r2r_kind *kind, unsigned flags);
+extern fftwl_plan fftwl_plan_r2r_1d(int n, long double *in, long double *out, fftwl_r2r_kind kind, unsigned flags);
+extern fftwl_plan fftwl_plan_r2r_2d(int nx, int ny, long double *in, long double *out, fftwl_r2r_kind kindx, fftwl_r2r_kind kindy, unsigned flags);
+extern fftwl_plan fftwl_plan_r2r_3d(int nx, int ny, int nz, long double *in, long double *out, fftwl_r2r_kind kindx, fftwl_r2r_kind kindy, fftwl_r2r_kind kindz, unsigned flags);
+extern fftwl_plan fftwl_plan_guru_r2r(int rank, const fftwl_iodim *dims, int howmany_rank, const fftwl_iodim *howmany_dims, long double *in, long double *out, const fftwl_r2r_kind *kind, unsigned flags);
+extern void fftwl_execute_r2r(const fftwl_plan p, long double *in, long double *out);
+extern void fftwl_destroy_plan(fftwl_plan p);
+extern void fftwl_forget_wisdom(void);
+extern void fftwl_cleanup(void);
+extern void fftwl_plan_with_nthreads(int nthreads);
+extern int fftwl_init_threads(void);
+extern void fftwl_cleanup_threads(void);
+extern void fftwl_export_wisdom_to_file(FILE *output_file);
+extern char *fftwl_export_wisdom_to_string(void);
+extern void fftwl_export_wisdom(void (*write_char)(char c, void *), void *data);
+extern int fftwl_import_system_wisdom(void);
+extern int fftwl_import_wisdom_from_file(FILE *input_file);
+extern int fftwl_import_wisdom_from_string(const char *input_string);
+extern int fftwl_import_wisdom(int (*read_char)(void *), void *data);
+extern void fftwl_fprint_plan(const fftwl_plan p, FILE *output_file);
+extern void fftwl_print_plan(const fftwl_plan p);
+extern void *fftwl_malloc(size_t n);
+extern void fftwl_free(void *p);
+extern void fftwl_flops(const fftwl_plan p, double *add, double *mul, double *fma);
+extern const char fftwl_version[];
+extern const char fftwl_cc[];
+extern const char fftwl_codelet_optim[];
 
-typedef void *(*fftw_malloc_type_function) (size_t n);
-typedef void  (*fftw_free_type_function) (void *p);
-typedef void  (*fftw_die_type_function) (const char *errString);
-extern DL_IMPORT(fftw_malloc_type_function) fftw_malloc_hook;
-extern DL_IMPORT(fftw_free_type_function) fftw_free_hook;
-extern DL_IMPORT(fftw_die_type_function) fftw_die_hook;
+#define FFTW_FORWARD (-1)
+#define FFTW_BACKWARD (+1)
 
-extern size_t fftw_sizeof_fftw_real(void);
+/* documented flags */
+#define FFTW_MEASURE (0U)
+#define FFTW_DESTROY_INPUT (1U << 0)
+#define FFTW_UNALIGNED (1U << 1)
+#define FFTW_CONSERVE_MEMORY (1U << 2)
+#define FFTW_EXHAUSTIVE (1U << 3) /* NO_EXHAUSTIVE is default */
+#define FFTW_PRESERVE_INPUT (1U << 4) /* cancels FFTW_DESTROY_INPUT */
+#define FFTW_PATIENT (1U << 5) /* IMPATIENT is default */
+#define FFTW_ESTIMATE (1U << 6)
 
-/* Wisdom: */
-/*
- * define this symbol so that users know we are using a version of FFTW
- * with wisdom
- */
-#define FFTW_HAS_WISDOM
-extern void fftw_forget_wisdom(void);
-extern void fftw_export_wisdom(void (*emitter) (char c, void *), void *data);
-extern fftw_status fftw_import_wisdom(int (*g) (void *), void *data);
-extern void fftw_export_wisdom_to_file(FILE *output_file);
-extern fftw_status fftw_import_wisdom_from_file(FILE *input_file);
-extern char *fftw_export_wisdom_to_string(void);
-extern fftw_status fftw_import_wisdom_from_string(const char *input_string);
+/* undocumented beyond-guru flags */
+#define FFTW_ESTIMATE_PATIENT (1U << 7)
+#define FFTW_BELIEVE_PCOST (1U << 8)
+#define FFTW_DFT_R2HC_ICKY (1U << 9)
+#define FFTW_NONTHREADED_ICKY (1U << 10)
+#define FFTW_NO_BUFFERING (1U << 11)
+#define FFTW_NO_INDIRECT_OP (1U << 12)
+#define FFTW_ALLOW_LARGE_GENERIC (1U << 13) /* NO_LARGE_GENERIC is default */
+#define FFTW_NO_RANK_SPLITS (1U << 14)
+#define FFTW_NO_VRANK_SPLITS (1U << 15)
+#define FFTW_NO_VRECURSE (1U << 16)
 
-/*
- * define symbol so we know this function is available (it is not in
- * older FFTWs)
- */
-#define FFTW_HAS_FPRINT_PLAN
-extern void fftw_fprint_plan(FILE *f, fftw_plan plan);
-
-/*****************************
- *    N-dimensional code
- *****************************/
-typedef struct {
-     int is_in_place;		/* 1 if for in-place FFTs, 0 otherwise */
-
-     int rank;			/* 
-				 * the rank (number of dimensions) of the
-				 * array to be FFTed 
-				 */
-     int *n;			/*
-				 * the dimensions of the array to the
-				 * FFTed 
-				 */
-     fftw_direction dir;
-
-     int *n_before;		/*
-				 * n_before[i] = product of n[j] for j < i 
-				 */
-     int *n_after;		/* n_after[i] = product of n[j] for j > i */
-
-     fftw_plan *plans;		/* 1d fftw plans for each dimension */
-
-     int nbuffers, nwork;
-     fftw_complex *work;	/* 
-				 * work array big enough to hold
-				 * nbuffers+1 of the largest dimension 
-				 * (has nwork elements)
-				 */
-} fftwnd_data;
-
-typedef fftwnd_data *fftwnd_plan;
-
-/* Initializing the FFTWND plan: */
-extern fftwnd_plan fftw2d_create_plan(int nx, int ny, fftw_direction dir,
-				      int flags);
-extern fftwnd_plan fftw3d_create_plan(int nx, int ny, int nz,
-				      fftw_direction dir, int flags);
-extern fftwnd_plan fftwnd_create_plan(int rank, const int *n,
-				      fftw_direction dir,
-				      int flags);
-
-extern fftwnd_plan fftw2d_create_plan_specific(int nx, int ny,
-					       fftw_direction dir,
-					       int flags,
-					   fftw_complex *in, int istride,
-					 fftw_complex *out, int ostride);
-extern fftwnd_plan fftw3d_create_plan_specific(int nx, int ny, int nz,
-					   fftw_direction dir, int flags,
-					   fftw_complex *in, int istride,
-					 fftw_complex *out, int ostride);
-extern fftwnd_plan fftwnd_create_plan_specific(int rank, const int *n,
-					       fftw_direction dir,
-					       int flags,
-					   fftw_complex *in, int istride,
-					 fftw_complex *out, int ostride);
-
-/* Freeing the FFTWND plan: */
-extern void fftwnd_destroy_plan(fftwnd_plan plan);
-
-/* Printing the plan: */
-extern void fftwnd_fprint_plan(FILE *f, fftwnd_plan p);
-extern void fftwnd_print_plan(fftwnd_plan p);
-#define FFTWND_HAS_PRINT_PLAN
-
-/* Computing the N-Dimensional FFT */
-extern void fftwnd(fftwnd_plan plan, int howmany,
-		   fftw_complex *in, int istride, int idist,
-		   fftw_complex *out, int ostride, int odist);
-extern void fftwnd_one(fftwnd_plan p, fftw_complex *in, fftw_complex *out);
+#define FFTW_NO_SIMD (1U << 17)
 
 
-#define RFFTW_V2
-
-typedef fftw_plan rfftw_plan;
-typedef fftwnd_plan rfftwnd_plan;
-
-#define FFTW_REAL_TO_COMPLEX FFTW_FORWARD
-#define FFTW_COMPLEX_TO_REAL FFTW_BACKWARD
-
-extern void rfftw(rfftw_plan plan, int howmany, fftw_real *in, int istride,
-		  int idist, fftw_real *out, int ostride, int odist);
-extern void rfftw_one(rfftw_plan plan, fftw_real *in, fftw_real *out);
-     
-extern rfftw_plan rfftw_create_plan_specific(int n, fftw_direction dir,
-					    int flags,
-					    fftw_real *in, int istride,
-					    fftw_real *out, int ostride);
-
-extern rfftw_plan rfftw_create_plan(int n, fftw_direction dir, int flags);
-extern void rfftw_destroy_plan(rfftw_plan plan);
-
-extern void rfftw_fprint_plan(FILE *f, rfftw_plan p);
-extern void rfftw_print_plan(rfftw_plan p);
-
-extern void rfftw_executor_simple(int n, fftw_real *in,
-				  fftw_real *out,
-				  fftw_plan_node *p,
-				  int istride,
-				  int ostride,
-				  fftw_recurse_kind recurse_kind);
-
-extern rfftwnd_plan rfftwnd_create_plan_specific(int rank, const int *n,
-						fftw_direction dir, int flags,
-						fftw_real *in, int istride,
-						fftw_real *out, int ostride);
-extern rfftwnd_plan rfftw2d_create_plan_specific(int nx, int ny,
-					   fftw_direction dir, int flags,
-					      fftw_real *in, int istride,
-					    fftw_real *out, int ostride);
-extern rfftwnd_plan rfftw3d_create_plan_specific(int nx, int ny, int nz,
-					   fftw_direction dir, int flags,
-					      fftw_real *in, int istride,
-					    fftw_real *out, int ostride);
-extern rfftwnd_plan rfftwnd_create_plan(int rank, const int *n,
-					  fftw_direction dir, int flags);
-extern rfftwnd_plan rfftw2d_create_plan(int nx, int ny,
-					  fftw_direction dir, int flags);
-extern rfftwnd_plan rfftw3d_create_plan(int nx, int ny, int nz,
-					  fftw_direction dir, int flags);
-extern void rfftwnd_destroy_plan(rfftwnd_plan plan);
-extern void rfftwnd_fprint_plan(FILE *f, rfftwnd_plan plan);
-extern void rfftwnd_print_plan(rfftwnd_plan plan);
-extern void rfftwnd_real_to_complex(rfftwnd_plan p, int howmany,
-				   fftw_real *in, int istride, int idist,
-			      fftw_complex *out, int ostride, int odist);
-extern void rfftwnd_complex_to_real(rfftwnd_plan p, int howmany,
-				fftw_complex *in, int istride, int idist,
-				 fftw_real *out, int ostride, int odist);
-extern void rfftwnd_one_real_to_complex(rfftwnd_plan p,
-					fftw_real *in, fftw_complex *out);
-extern void rfftwnd_one_complex_to_real(rfftwnd_plan p,
-					fftw_complex *in, fftw_real *out);
-
-fftw_complex* gsl_vector_complex_fftw_complex(gsl_vector_complex *v);
-
+static fftw_complex* fftw_vector_alloc(size_t n);
+static void copy_gsl_vector_complex_fftw_complex(fftw_complex *w, gsl_vector_complex *v);
+static void copy_fftw_complex_gsl_vector_complex(gsl_vector_complex *v, fftw_complex *w);
 
 %scheme %{
 (define my-so (dynamic-link "libguile-fftw.la"))

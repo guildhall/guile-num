@@ -16,5 +16,7 @@ config.cache
 libtool
 config.status
 stamp-h
+stamp-h1
 Makefile
 autom4te.cache
+pre-inst-guile

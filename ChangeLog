@@ -1,3 +1,12 @@
+2003-05-13  Arno Peters  <a.w.peters@ieee.org>
+
+	* sndfile/.cvsignore: Ignoreing more automatically generated
+	files.
+
+	* fftw/.cvsignore: Ignoring more automatically generated files.
+
+	* debian/control: Updated build dependencies on FFTW3.
+
 2003-04-23  Arno Peters  <a.w.peters@ieee.org>
 
 	* debian/*: Debian support.

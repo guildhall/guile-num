@@ -1,4 +1,4 @@
-gsl_*_wrap.c
+lapack.c
 *.la
 *.lo
 lapack.scm

@@ -1,5 +1,9 @@
 *_wrap.c
+sndfile.c
 sndfile.scm
 Makefile.in
 Makefile
 .deps
+.libs
+*.la
+*.lo

@@ -1,5 +1,8 @@
-fftw_*_wrap.c
+fftw.c
 fftw.scm
 Makefile
 Makefile.in
 .deps
+.libs
+*.la
+*.lo
