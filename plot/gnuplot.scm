@@ -28,18 +28,18 @@
 
 (define (write-vectors x y)
   (do ((index 0 (+ index 1)))
-      ((= index (min (vector-length x)
-		     (vector-length y))))
-    (display (vector-ref x index))
+      ((= index (min (uniform-vector-length x)
+		     (uniform-vector-length y))))
+    (display (uniform-vector-ref x index))
     (display "\t")
-    (display (vector-ref y index))
+    (display (uniform-vector-ref y index))
     (newline)))
 
 (define-syntax to-gnuplot
   (syntax-rules ()
 		((_ x y body1 body2 ...)
-		 (cond ((not (= (vector-length x)
-				(vector-length y)))
+		 (cond ((not (= (uniform-vector-length x)
+				(uniform-vector-length y)))
 			(error "vectors should have the same length"))
 		       (else
 			(let ((tmpfile (tmpnam)))

@@ -51,8 +51,8 @@
   "Returns a function that filters its argument"
   (if (= (uniform-vector-ref den 0) 0.0)
       (error "the first element of the denominator must be non-zero"))
-  (let* ((len   (- (max (uniform-vector-length num)
-			(uniform-vector-length den)) 1))
+  (let* ((len   (-1+ (max (uniform-vector-length num)
+			  (uniform-vector-length den))))
 	 (state (if (null? init)
 		    (make-array 0.0 len)
 		    (car init)))
@@ -69,7 +69,7 @@
     (lambda (num den x)
       (if (= (uniform-vector-ref den 0) 0.0)
 	  (error "the first element of the denominator must be non-zero"))
-      (if (not (= len (-1 (max (uniform-vector-length num)
+      (if (not (= len (-1+ (max (uniform-vector-length num)
 				(uniform-vector-length den)))))
 	  (error "state and filter polynomials are incompatible"))
       (let* ((normalize (lambda (x) (/ x (uniform-vector-ref den 0))))
@@ -82,7 +82,7 @@
 initial values @var{init}."
   (if (= (uniform-vector-ref den 0) 0.0)
       (error "filter: the first element of the denominator must be non-zero"))
-  (let* ((len   (-1 (max (uniform-vector-length num)
+  (let* ((len   (-1+ (max (uniform-vector-length num)
 			  (uniform-vector-length den))))
 	 (state (if (null? init)
 		    (make-vector len 0.0)

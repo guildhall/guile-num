@@ -19,7 +19,7 @@ maintainer-clean:
 	$(MAKE) -C gsl maintainer-clean
 	$(MAKE) -C lapack maintainer-clean
 
-check: all
+check:
 	$(GUILE) -s test_gsl_blas.scm
 	$(GUILE) -s test_gsl_chebyshev.scm
 	$(GUILE) -s test_gsl_diff.scm
