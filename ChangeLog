@@ -1,3 +1,9 @@
+2003-09-13  Arno Peters  <a.w.peters@ieee.org>
+
+	* configure.in: Released 0.4.0
+
+	* Makefile.am: made sure test files get into distribution as well.
+
 2003-05-13  Arno Peters  <a.w.peters@ieee.org>
 
 	* test_fftw.scm: Updated to fit the new interface.
