@@ -1,7 +1,7 @@
 SWIG = swig
 SWIGFLAGS = -guile -scmstub -Linkage module -outdir ..
 LD = g77
-LDADD = @FLIBS@ -llapack -lblas2
+LDADD = @FLIBS@ -llapack -lblas
 
 subpkgdatadir = $(datadir)/guile/lapack
 subpkgdata_DATA = lapack.scm
