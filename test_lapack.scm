@@ -1,5 +1,6 @@
-(use-modules (gsl gsl-math))
-(use-modules (lapack lapack))
+(use-modules (gsl gsl-math)
+	     (gsl vector)
+	     (lapack lapack))
 
 (display "Testing dgesv\n")
 (let ((A #2i((-1.0  1.0 2.0)

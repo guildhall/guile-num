@@ -1,5 +1,6 @@
 gsl_*_wrap.c
 gsl-*.scm
+*.inc
 *.c
 *.lo
 *.la

@@ -5,35 +5,33 @@
 	     (ice-9 regex)
 	     (ice-9 format))
 
-(define (postprocess disp file port)
+(define (postprocess disp file-regex port)
   (let ((line (read-line port)))
     (cond ((eof-object? line)
 	   #t)
 	  (else
 	   (let* ((regex (string-append "^# [1-9][0-9]* \"(.*)\""))
 		  (match (string-match regex line)))
-	     ;; (format #t "~S\n" match)
 	     (cond ((not match)
 		    (cond (disp
 			   (format #t "~A\n" line)
-			   (postprocess #t file port))
+			   (postprocess #t file-regex port))
 			  (else
-			   (postprocess #f file port))))
-		   ((string=? (match:substring match 1)
-			      file)
+			   (postprocess #f file-regex port))))
+		   ((string-match file-regex (match:substring match 1))
 		    (format #t "// ~A\n" line)
-		    (postprocess #t file port))
+		    (postprocess #t file-regex port))
 		   (else
-		    (postprocess #f file port))))))))
+		    (postprocess #f file-regex port))))))))
 
 (define program-name (car (command-line)))
 (define program-version "0.0.1")
 
 (define help
-  (string-append "Usage: " program-name " [OPTION] FILE
+  (string-append "Usage: " program-name " [OPTION] FILE-REGEX
 
 Destill from standard input only those parts that have come from the
-macro-expanded FILE.
+macro-expanded FILE-REGEX.
 
   --help               This message
   --version            Version information
@@ -56,9 +54,10 @@ macro-expanded FILE.
 	  (cdr (command-line)))
 
 (case (length *non-option-args*)
-  ((0) (begin (format #t "~A\n" help)
-	      (quit))
-   (1) (postprocess #f (car *non-option-args*) (current-input-port))
-   (else (error "Only support one file argument"))))
-
-
+  ((0)
+   (format #t "~A\n" help)
+   (quit))
+  ((1)
+   ;; (format (current-error-port) "Processing ~A\n" (car *non-option-args*))
+   (postprocess #f (car *non-option-args*) (current-input-port)))
+  (else (error "Only support one regex argument")))

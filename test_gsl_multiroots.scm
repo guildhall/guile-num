@@ -1,5 +1,5 @@
 (use-modules (gsl gsl-errno))
-(use-modules (gsl gsl-vector))
+(use-modules (math gsl-vector))
 (use-modules (gsl gsl-matrix))
 (use-modules (gsl gsl-multiroots))
 (use-modules (ice-9 format))
