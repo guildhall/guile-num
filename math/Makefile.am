@@ -1,2 +1,2 @@
 subpkgdatadir = $(datadir)/guile/math
-subpkgdata_DATA = array-fun.scm const.m
+subpkgdata_DATA = array-fun.scm const.scm

@@ -4,7 +4,7 @@ LD = g77
 LDADD = -lswigguile @FLIBS@ -llapack -lblas2
 
 subpkgdatadir = $(datadir)/guile/lapack
-subpkgdata_DATA = *.scm
+subpkgdata_DATA = lapack.scm
 
 SWIG_INTERFACES = \
 	lapack.i

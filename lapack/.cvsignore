@@ -5,3 +5,4 @@ lapack.scm
 Makefile.in
 Makefile
 .deps
+.libs
