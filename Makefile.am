@@ -1,4 +1,4 @@
-SUBDIRS = finance fftw gsl lapack math plot signal sound
+SUBDIRS = finance fftw gsl lapack math plot signal sound testfun
 
 EXTRA_DIST = test_finance_account.scm test_gsl_blas.scm	       \
 test_gsl_chebyshev.scm test_gsl_diff.scm test_gsl_fit.scm      \

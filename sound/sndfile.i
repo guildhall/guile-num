@@ -148,4 +148,33 @@ extern sf_count_t sf_writef_double (SNDFILE *sndfile, double *ptr, sf_count_t fr
 %scheme %{
 (define my-so (dynamic-link "libguile-sndfile.so"))
 (dynamic-call "SWIG_init" my-so)
+(export with-sound-from-file with-sound-to-file)
+
+(define (with-sound-from-file file func)
+  (let ((sf-info (sf-info-alloc)))
+    (SF-INFO-format-set sf-info 0)
+    (let ((handle (sf-open file (SFM-READ) sf-info)))
+      (cond ((null? handle)
+	     (error "Can't open sound file for reading"))
+	    (else
+	     (let ((channels (SF-INFO-channels-get sf-info))
+		   (frames (SF-INFO-frames-get sf-info))
+		   (samplerate (SF-INFO-samplerate-get sf-info))
+		   (fileformat (SF-INFO-format-get sf-info)))
+	       (func handle fileformat samplerate channels frames)
+	       (sf-close handle)))))
+    (sf-info-free sf-info)))
+
+(define (with-sound-to-file file fileformat samplerate channels func)
+  (let ((sf-info (sf-info-alloc)))
+    (SF-INFO-samplerate-set sf-info samplerate)
+    (SF-INFO-channels-set sf-info channels)
+    (SF-INFO-format-set sf-info fileformat)
+    (let ((handle (sf-open file (SFM-WRITE) sf-info)))
+      (cond ((null? handle)
+	     (error "Can't open sound file for writing"))
+	    (else
+	     (func handle)
+	     (sf-close handle))))
+    (sf-info-free sf-info)))
 %}

@@ -26,6 +26,6 @@ AC_SUBST(top_srcdir_absolute)
 
 AC_CONFIG_FILES([Makefile finance/Makefile fftw/Makefile gsl/Makefile
 		 lapack/Makefile math/Makefile plot/Makefile
-		 signal/Makefile sound/Makefile])
+		 signal/Makefile sound/Makefile testfun/Makefile])
 AC_CONFIG_FILES([pre-inst-guile], [chmod +x pre-inst-guile])
 AC_OUTPUT
