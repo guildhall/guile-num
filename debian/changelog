@@ -1,3 +1,9 @@
+guile-numerics (0.3.0-1) unstable; urgency=low
+
+  * New Release.
+
+ -- Arno Peters <a.w.peters@ieee.org>  Wed, 23 Apr 2003 15:56:02 +0200
+
 guile-numerics (0.2.0-1) unstable; urgency=low
 
   * Initial Release.

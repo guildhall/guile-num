@@ -1,0 +1,19 @@
+2003-04-23  Arno Peters  <a.w.peters@ieee.org>
+
+	* debian/*: Debian support.
+
+	* sound/sndfile.i: Added with-sound-from-file, with-sound-to-file
+	as Schemy ways of dealing with the low-level libsndfile interface
+	for opening/closing files.  These functions are still a bit light
+	on checking memory allocation and file opening.
+
+	* sound/conversion.scm: Added missing constants.
+
+	* signal/test-*.scm: Separated tests from main module files.
+
+	* signal/butter.scm: New modules (signal butter), for Butterworth
+	filters.
+
+	* math/const.scm: New module (math const), for mathematical
+	constants.
+

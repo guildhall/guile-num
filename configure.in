@@ -1,5 +1,5 @@
 AC_INIT
-AM_INIT_AUTOMAKE("guile-numerics", "0.2.0")
+AM_INIT_AUTOMAKE("guile-numerics", "0.3.0")
 AC_PREREQ(2.54)
 AC_CONFIG_SRCDIR("test_gsl_blas.scm")
 
