@@ -1,3 +1,10 @@
+2004-01-08  Arno Peters  <a.w.peters@ieee.org>
+
+	* sound/Makefile.am: adjusted for new command line parameter to
+	destill.scm
+
+	* destill.scm: added command line processing
+
 2004-01-05  Arno Peters  <a.w.peters@ieee.org>
 
 	* destill.scm: Clean up preprocessed header files to extract the

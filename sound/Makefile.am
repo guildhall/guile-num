@@ -25,6 +25,6 @@ SUFFIXES = .i .inc
   -o $@ $<
 
 sndfile.inc: /usr/include/sndfile.h
-	$(CPP) $< | guile -s ../destill.scm > $@
+	$(CPP) $< | ../destill.scm $< > $@
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) sndfile.scm
