@@ -6,66 +6,31 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_multiroots.h>
 
-static SCM
-_copy_gsl_vector2scm (SCM target, const gsl_vector *source)
-{
-	SCM result;
-	size_t i, len;
-
-	gh_defer_ints();
-	for (i = 0; i < source->size; i++) {
-		double tmp;
-
-		tmp = gsl_vector_get(source, i);
-		scm_vector_set_x(target, gh_long2scm(i),
-				 gh_double2scm(tmp));
-	}
-	gh_allow_ints();
-	result = GH_UNSPECIFIED;
-	return result;
-}
-
-static SCM
-_copy_scm2gsl_vector (gsl_vector *target, SCM source)
-{
-	SCM result;
-	size_t i, len;
-
-	gh_defer_ints();
-	for (i = 0; i < target->size; i++) {
-		double tmp;
-
-		tmp = gh_scm2double(scm_vector_ref(source, gh_long2scm(i)));
-		gsl_vector_set(target, i, tmp);
-	}
-	gh_allow_ints();
-	result = GH_UNSPECIFIED;
-	return result;
-}
-
 static int
 _wrap_guile_multiroot_function (const gsl_vector * x,
 				void *params,
 				gsl_vector * f)
 {
+#define FUNC_NAME "wrap-guile-multiroot-function"
 	SCM result;
 	SCM proc;
 	SCM arg;
 
+	gh_defer_ints();
 	proc = (SCM) params;
-
-	arg = scm_make_vector(gh_long2scm(f->size), gh_double2scm(0.0));
-	_copy_gsl_vector2scm(arg, x);
-	result = gh_call1(proc, arg);
-	_copy_scm2gsl_vector(f, result);
+        arg = SWIG_Guile_MakePtr ((gsl_vector *) x, SWIGTYPE_p_gsl_vector);
+        result = SWIG_Guile_MakePtr (f, SWIGTYPE_p_gsl_vector);
+	gh_call2(proc, result, arg);
+	gh_allow_ints();
 
 	return GSL_SUCCESS;
+#undef FUNC_NAME
 }
 
 static SCM
 _wrap_gsl_multiroot_function_alloc (SCM s_0, SCM s_1)
 {
-    #define FUNC_NAME "gsl-multiroot-function-alloc"
+#define FUNC_NAME "gsl-multiroot-function-alloc"
     SCM params;
     gsl_multiroot_function *result;
     SCM gswig_result;
@@ -83,7 +48,7 @@ _wrap_gsl_multiroot_function_alloc (SCM s_0, SCM s_1)
         gswig_result = SWIG_Guile_MakePtr (result, SWIGTYPE_p_gsl_multiroot_function);
     }
     return gswig_result;
-    #undef FUNC_NAME
+#undef FUNC_NAME
 }
 
 

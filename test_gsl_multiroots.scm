@@ -8,13 +8,11 @@
   (apply format (current-output-port) args))
 
 (define (rosenbrock a b)
-  (lambda (x)
-    (let ((x0 (vector-ref x 0))
-	  (x1 (vector-ref x 1)))
-;;;      (display "x0: ") (display x0) (newline)
-;;;      (display "x1: ") (display x1) (newline)
-      (list->vector (list (* a (- 1 x0))
-			  (* b (- x1 (* x0 x0))))))))
+  (lambda (y x)
+    (let ((x0 (gsl-vector-get x 0))
+	  (x1 (gsl-vector-get x 1)))
+      (gsl-vector-set y 0 (* a (- 1 x0)))
+      (gsl-vector-set y 1 (* b (- x1 (* x0 x0)))))))
 
 (define (print-state iter s)
   (cout "iter = ~3D x = ~7F ~7F f(x) = ~7E ~7E\n"
@@ -55,13 +53,6 @@
     (gsl-vector-free y)
 ))
 
-
-(define (rosenbrock a b)
-  (lambda (y x)
-    (let ((x0 (gsl-vector-get x 0))
-	  (x1 (gsl-vector-get x 1)))
-      (gsl-vector-set y 0 (* a (- 1 x0)))
-      (gsl-vector-set y 1 (* b (- x1 (* x0 x0)))))))
 
 (define (rosenbrock-df a b)
   (lambda (J x)
