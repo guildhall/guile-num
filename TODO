@@ -1,4 +1,36 @@
-* properly integrate functions reading/writing to file
-* ntuple
-* siman
-* odeiv
+THINGS TO BE DONE
+=================
+
+Add automake/autoconf support
+
+   Detect Guile, GSL, LAPACK; install into proper directory.
+
+
+Support Guile 1.6 handling of dynamically linked libraries
+
+
+Expand GSL support
+
+  Properly integrate functions reading/writing to file, ntuple, siman,
+  odeiv, minimization over multiple dimensions, constants, error
+  handling form of special functions, nonlinear least squares fitting.
+
+
+Expand LAPACK support
+
+  Add all simple drivers for linear equations, standard and
+  generalized linear least squares problems, standard eigenvalue and
+  singular value problems.
+
+
+High level Scheme interface
+
+  Abstract away the low level allocation/deallocation routines and
+  improve integration with Guile.
+
+
+Bugs
+
+  Look into protecting GSL structures from Guile's garbage collector.
+  Currently, this problem has only surfaced once in conjunction with
+  root finding over multiple dimensions.
