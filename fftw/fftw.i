@@ -3,6 +3,14 @@
 %{
 #include <fftw.h>
 #include <rfftw.h>
+#include <gsl/gsl_complex.h>
+#include <gsl/gsl_vector.h>
+
+static fftw_complex* gsl_vector_complex_fftw_complex(gsl_vector_complex *v)
+{
+	return (fftw_complex *) v->data;
+}
+
 %}
 
 typedef double fftw_real;
@@ -408,6 +416,8 @@ extern void rfftwnd_one_real_to_complex(rfftwnd_plan p,
 					fftw_real *in, fftw_complex *out);
 extern void rfftwnd_one_complex_to_real(rfftwnd_plan p,
 					fftw_complex *in, fftw_real *out);
+
+fftw_complex* gsl_vector_complex_fftw_complex(gsl_vector_complex *v);
 
 
 %scheme %{

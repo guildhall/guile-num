@@ -13,22 +13,17 @@
 				 (FFTW-FORWARD)
 				 (FFTW-ESTIMATE))))
     (fftw-one plan
-	      (gsl-vector-complex-data in)
-	      (gsl-vector-complex-data out))
-    (let ((result (gsl-complex-vector->vector out)))
+	      (gsl-vector-complex-fftw-complex in)
+	      (gsl-vector-complex-fftw-complex out))
+    (let ((result (gsl-vector-complex->vector out)))
       (fftw-destroy-plan plan)
       (gsl-vector-complex-free in)
       (gsl-vector-complex-free out)
       result)))
 
-;; This test will generate the following error message, due to a
-;; mismatch in type between the output of (gsl-complex-vector-data .) 
-;; that is (double *) and the expected input type of fftw-one:
-;; (fftw-complex *).  The conversion routines need to be written.
-;;
-;; ERROR: In procedure fftw-one:
-;; ERROR: Wrong type argument in position 2: #<swig double * 80565e0>
-
 (let ((a #(1 0+i -1 0-i 1 0+i -1 0-i)))
-  (cout (my-fftw-one a)))
+  (if (equal? (my-fftw-one a)
+	      #c(0.0 0.0 8.0 0.0 0.0 0.0 0.0 0.0))
+      (display "PASSED\n")
+      (display "FAILED\n")))
 
