@@ -18,7 +18,7 @@ LIBS="$LIBS `gsl-config --libs`"
 CFLAGS="$CFLAGS `guile-config compile`"
 LIBS="$LIBS `guile-config link`"
 
-AC_CONFIG_FILES([Makefile finance/Makefile gsl/Makefile
+AC_CONFIG_FILES([Makefile finance/Makefile fftw/Makefile gsl/Makefile
 		 lapack/Makefile math/Makefile plot/Makefile
 		 signal/Makefile sound/Makefile])
 AC_OUTPUT

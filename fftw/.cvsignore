@@ -1,0 +1,4 @@
+fftw_*_wrap.c
+fftw.scm
+Makefile
+Makefile.in

@@ -1,0 +1,23 @@
+SWIG = swig
+SWIGFLAGS = -guile -c
+LDADD = -lswigguile -lfftw
+
+SWIG_INTERFACES = \
+	fftw.i
+
+BUILT_SOURCES = \
+	fftw.c
+
+lib_LTLIBRARIES = \
+	libguile-fftw.la
+
+libguile_fftw_la_SOURCES = fftw.c
+libguile_fftw_la_LDFLAGS = $(LDADD)
+
+SUFFIXES = .i
+.i.c:
+	$(SWIG) $(SWIGFLAGS) \
+  -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
+  -o $@ $<
+
+MOSTLYCLEANFILES = $(BUILT_SOURCES) *.scm
