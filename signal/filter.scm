@@ -17,16 +17,13 @@
 ;;; USA
 
 (define-module (signal filter)
-  :use-module (ice-9 slib)
   :use-module (math array-fun)
-;;  :use-module (ice-9 syncase)
-)
+  :use-module (ice-9 syncase))
 
 (export make-fixed-iir-filter
 	make-adaptive-iir-filter
 	iir-filter)
-
-(require 'macro-by-example)
+(export-syntax iterate-filter)		; work-around for bug in Guile
 
 (define-syntax iterate-filter
   (syntax-rules 

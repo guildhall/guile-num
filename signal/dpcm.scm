@@ -1,4 +1,4 @@
-(load "unit-test.scm")
+(use-modules (testfun unit-test))
 
 ;; make-linear-quantiser : number -> (number -> number)
 (define (make-linear-quantiser stepsize)

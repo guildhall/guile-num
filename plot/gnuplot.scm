@@ -17,14 +17,14 @@
 ;;; USA
 
 (define-module (plot gnuplot)
-  :use-module (ice-9 slib))
+  :use-module (ice-9 syncase))
 
 (export plot
 	semilogx
 	semilogy
 	loglog)
+(export-syntax to-gnuplot)		; work-around for bug in Guile
 
-(require 'macro-by-example)
 
 (define (write-vectors x y)
   (do ((index 0 (+ index 1)))
