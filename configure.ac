@@ -2,7 +2,7 @@ AC_INIT
 AM_INIT_AUTOMAKE("guile-numerics", "0.4.0")
 AC_PREREQ(2.54)
 AC_CONFIG_SRCDIR("test_gsl_blas.scm")
-AC_CONFIG_HEADERS
+dnl AC_CONFIG_HEADERS(config.h)
 
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE

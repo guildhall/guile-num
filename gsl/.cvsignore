@@ -1,5 +1,6 @@
 gsl_*
 gsl-*
+*.scm
 *_inc.i
 *.c
 *.lo

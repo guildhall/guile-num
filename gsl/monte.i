@@ -1,4 +1,5 @@
 %module "gsl/monte"
+%include "typemaps.i"
 
 %multiple_values;
 

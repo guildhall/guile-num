@@ -1,4 +1,5 @@
 %module "gsl/diff"
+%include "typemaps.i"
 
 %multiple_values;
 

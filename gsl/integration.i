@@ -1,4 +1,5 @@
 %module "gsl/integration"
+%include "typemaps.i"
 
 %multiple_values;
 

@@ -1,6 +1,6 @@
 *_wrap.c
 sndfile.c
-sndfile.inc
+sndfile_inc.i
 sndfile.scm
 Makefile.in
 Makefile

@@ -18,6 +18,7 @@
 */
 
 %module "lapack/lapack"
+%include "typemaps.i"
 
 %header %{
 #include <gsl/gsl_complex_math.h>
