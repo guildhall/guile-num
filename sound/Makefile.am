@@ -9,7 +9,7 @@ SWIG_INTERFACES = \
 	sndfile.i
 
 BUILT_SOURCES = \
-	sndfile.inc
+	sndfile.inc \
 	sndfile.c
 
 lib_LTLIBRARIES = \
@@ -25,6 +25,6 @@ SUFFIXES = .i .inc
   -o $@ $<
 
 sndfile.inc: /usr/include/sndfile.h
-	$(CCP) $< | guile -s ../destill.scm > $@
+	$(CPP) $< | guile -s ../destill.scm > $@
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) sndfile.scm
