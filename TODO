@@ -1,7 +1,7 @@
 THINGS TO BE DONE
 =================
 
-Add automake/autoconf support
+automake/autoconf support
 
    Detect Guile, GSL, LAPACK; install into proper directory.
 
