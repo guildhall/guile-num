@@ -33,7 +33,9 @@
 	ensure-complex-array
 	array->uniform-array
 	real-vector?
+	complex-vector?
 	real-matrix?
+	complex-matrix?
 	array-rows
 	array-columns
 	array-add-constant

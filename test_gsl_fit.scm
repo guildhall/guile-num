@@ -1,4 +1,3 @@
-(use-modules (gsl gsl))
 (use-modules (gsl gsl-vector))
 (use-modules (gsl gsl-fit))
 (use-modules (ice-9 format))

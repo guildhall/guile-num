@@ -1,4 +1,3 @@
-(use-modules (gsl gsl))
 (use-modules (gsl gsl-math))
 (use-modules (gsl gsl-vector))
 (use-modules (math array-fun))

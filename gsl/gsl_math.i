@@ -174,4 +174,15 @@ extern gsl_complex gsl_complex_arccoth (gsl_complex Z);
 %scheme %{
 (define my-so (dynamic-link "gsl/libguile-gsl-math.so"))
 (dynamic-call "SWIG_init" my-so)
+
+(export complex->gsl-complex gsl-complex->complex)
+
+;;; Complex number conversion functions
+(define (complex->gsl-complex x)
+  (let ((z (gsl-complex-alloc)))
+    (gsl-set-complex z (real-part x) (imag-part x))))
+
+(define (gsl-complex->complex z)
+  (+ (gsl-real z) (* +i (gsl-imag z))))
+
 %}

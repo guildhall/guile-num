@@ -1,3 +1,4 @@
+(use-modules (gsl gsl-math))
 (use-modules (lapack lapack))
 
 (display "Testing dgesv\n")

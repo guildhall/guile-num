@@ -16,11 +16,12 @@ libguile-lapack.so: gsl_lapack_wrap.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
 gsl_lapack_wrap.c: gsl_lapack.i
-	$(SWIG) $(SWIGFLAGS) -scmstub guile-lapack.scm $<
+	$(SWIG) $(SWIGFLAGS) -scmstub lapack.scm $<
 
 # maintainer-clean: clean
 clean:
 	$(RM) *.so *.o *~
 	$(RM) gsl_*_wrap.c
+	$(RM) lapack.scm
 
 .PHONY: all clean

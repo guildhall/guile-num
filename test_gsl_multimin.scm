@@ -1,4 +1,3 @@
-(use-modules (gsl gsl))
 (use-modules (gsl gsl-errno))
 (use-modules (gsl gsl-vector))
 (use-modules (gsl gsl-matrix))

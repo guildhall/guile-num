@@ -1,8 +1,6 @@
-(use-modules (gsl gsl))
 (use-modules (gsl gsl-errno))
 (use-modules (gsl gsl-vector))
 (use-modules (gsl gsl-matrix))
-(use-modules (gsl gsl-multiroot-function))
 (use-modules (gsl gsl-multiroots))
 (use-modules (ice-9 format))
 
@@ -115,7 +113,7 @@
 	    (loop (+ iter 1) (gsl-multiroot-fdfsolver-iterate s)))))
 
     (gsl-multiroot-fdfsolver-free s)
-    (gsl-multiroot-function-free F)
+    (gsl-multiroot-function-fdf-free F)
     (gsl-vector-free x)
     (gsl-vector-free y)
 ))

@@ -148,6 +148,63 @@ extern void gsl_sort_vector_smallest_index (size_t * P, size_t K, const gsl_vect
 extern void gsl_sort_vector_largest_index (size_t * P, size_t K, const gsl_vector * V);
 
 %scheme %{
+(use-modules (gsl gsl-math))
+
 (define my-so (dynamic-link "gsl/libguile-gsl-vector.so"))
 (dynamic-call "SWIG_init" my-so)
+
+(export vector->gsl-vector-int
+	gsl-vector-int->vector
+	vector->gsl-vector
+	gsl-vector->vector
+	vector->gsl-vector-complex
+	gsl-vector-complex->vector)
+
+;;; Vector conversion functions
+(define (vector->gsl-vector-int v)
+  (let* ((len (uniform-vector-length v))
+	 (w (gsl-vector-int-calloc len)))
+    (do ((i 0 (+ i 1)))
+	((= i len) w)
+      (gsl-vector-int-set w i (uniform-vector-ref v i)))))
+
+(define (gsl-vector-int->vector v)
+  (let* ((len (gsl-vector-int-length v))
+	 (w (make-uniform-vector len -1)))
+    (do ((i 0 (+ i 1)))
+	((= i len) w)
+      (uniform-vector-set! w i (gsl-vector-int-get v i)))))
+
+(define (vector->gsl-vector v)
+  (let* ((len (uniform-vector-length v))
+	 (w (gsl-vector-calloc len)))
+    (do ((i 0 (+ i 1)))
+	((= i len) w)
+      (gsl-vector-set w i (uniform-vector-ref v i)))))
+
+(define (gsl-vector->vector v)
+  (let* ((len (gsl-vector-length v))
+	 (w (make-uniform-vector len 1/3)))
+    (do ((i 0 (+ i 1)))
+	((= i len) w)
+      (uniform-vector-set! w i (gsl-vector-get v i)))))
+
+(define (vector->gsl-vector-complex v)
+  (let* ((len (uniform-vector-length v))
+	 (w (gsl-vector-complex-calloc len))
+	 (z (gsl-complex-alloc)))
+    (do ((i 0 (+ i 1)))
+	((= i len) w)
+      (let* ((z (uniform-vector-ref v i))
+	     (re (real-part z))
+	     (im (imag-part z)))
+	(gsl-vector-complex-set-real-imag w i re im)))))
+
+(define (gsl-vector-complex->vector v)
+  (let ((w (make-uniform-vector (gsl-vector-complex-length v) 0+i)))
+    (do ((i 0 (+ i 1)))
+	((= i (gsl-vector-complex-length v)) w)
+      (let ((z (gsl-vector-complex-get v i)))
+	(uniform-vector-set! w i (gsl-complex->complex z))))))
+
 %}
