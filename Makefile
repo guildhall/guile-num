@@ -29,6 +29,7 @@ check: all
 	$(GUILE) -s test_gsl_math.scm
 	$(GUILE) -s test_gsl_minimize.scm
 	$(GUILE) -s test_gsl_monte.scm
+	$(GUILE) -s test_gsl_multimin.scm
 	$(GUILE) -s test_gsl_multiroots.scm
 	$(GUILE) -s test_gsl_odeiv.scm
 	$(GUILE) -s test_gsl_qrng.scm

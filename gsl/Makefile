@@ -4,7 +4,7 @@ CC = gcc
 CFLAGS = -g -O2 -DHAVE_INLINE -c -fpic
 LDFLAGS = -shared -lswigguile -lgsl -lgslcblas
 
-all: libgsl-math.so libgsl-block.so libgsl-vector.so libgsl-matrix.so libgsl-blas.so libgsl-special.so libgsl-errno.so libgsl-poly.so libgsl-permute.so libgsl-combination.so libgsl-linalg.so libgsl-eigen.so libgsl-fft.so libgsl-integration.so libgsl-rng.so libgsl-qrng.so libgsl-randist.so libgsl-statistics.so libgsl-histogram.so libgsl-monte.so libgsl-odeiv.so libgsl-interp.so libgsl-function.so libgsl-diff.so libgsl-chebyshev.so libgsl-levin.so libgsl-dht.so libgsl-roots.so libgsl-minimize.so libgsl-multiroot-function.so libgsl-multiroots.so libgsl-fit.so
+all: libgsl-math.so libgsl-block.so libgsl-vector.so libgsl-matrix.so libgsl-blas.so libgsl-special.so libgsl-errno.so libgsl-poly.so libgsl-permute.so libgsl-combination.so libgsl-linalg.so libgsl-eigen.so libgsl-fft.so libgsl-integration.so libgsl-rng.so libgsl-qrng.so libgsl-randist.so libgsl-statistics.so libgsl-histogram.so libgsl-monte.so libgsl-odeiv.so libgsl-interp.so libgsl-function.so libgsl-diff.so libgsl-chebyshev.so libgsl-levin.so libgsl-dht.so libgsl-roots.so libgsl-minimize.so libgsl-multiroot-function.so libgsl-multiroots.so libgsl-fit.so libgsl-multimin.so
 
 dist: clean
 
@@ -110,7 +110,10 @@ libgsl-multiroots.so: gsl_multiroots_wrap.o
 libgsl-fit.so: gsl_fit_wrap.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
-.PRECIOUS: gsl_math_wrap.c gsl_block_wrap.c gsl_vector_wrap.c gsl_matrix_wrap.c gsl_blas_wrap.c gsl_special_wrap.c gsl_errno_wrap.c gsl_poly_wrap.c gsl_permute_wrap.c gsl_combination_wrap.c gsl_linalg_wrap.c gsl_eigen_wrap.c gsl_fft_wrap.c gsl_integration_wrap.c gsl_rng_wrap.c gsl_qrng_wrap.c gsl_randist_wrap.c gsl_statistics_wrap.c gsl_histogram_wrap.c gsl_monte_wrap.c gsl_odeiv_wrap.c gsl_interp_wrap.c gsl_function_wrap.c gsl_diff_wrap.c gsl_chebyshev_wrap.c gsl_levin_wrap.c gsl_dht_wrap.c gsl_roots_wrap.c gsl_minimize_wrap.c gsl_multiroot_function_wrap.c gsl_multiroots_wrap.c gsl_fit_wrap.c
+libgsl-multimin.so: gsl_multimin_wrap.o
+	$(CC) $(LDFLAGS) -o $@ $^
+
+.PRECIOUS: gsl_math_wrap.c gsl_block_wrap.c gsl_vector_wrap.c gsl_matrix_wrap.c gsl_blas_wrap.c gsl_special_wrap.c gsl_errno_wrap.c gsl_poly_wrap.c gsl_permute_wrap.c gsl_combination_wrap.c gsl_linalg_wrap.c gsl_eigen_wrap.c gsl_fft_wrap.c gsl_integration_wrap.c gsl_rng_wrap.c gsl_qrng_wrap.c gsl_randist_wrap.c gsl_statistics_wrap.c gsl_histogram_wrap.c gsl_monte_wrap.c gsl_odeiv_wrap.c gsl_interp_wrap.c gsl_function_wrap.c gsl_diff_wrap.c gsl_chebyshev_wrap.c gsl_levin_wrap.c gsl_dht_wrap.c gsl_roots_wrap.c gsl_minimize_wrap.c gsl_multiroot_function_wrap.c gsl_multiroots_wrap.c gsl_fit_wrap.c gsl_multimin_wrap.c
 
 
 # maintainer-clean: clean

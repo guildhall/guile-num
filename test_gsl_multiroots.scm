@@ -52,6 +52,7 @@
 	    (loop (+ iter 1) (gsl-multiroot-fsolver-iterate s)))))
 
     (gsl-multiroot-fsolver-free s)
+    (gsl-multiroot-function-free F)
     (gsl-vector-free x)
     (gsl-vector-free y)
 ))
@@ -114,6 +115,7 @@
 	    (loop (+ iter 1) (gsl-multiroot-fdfsolver-iterate s)))))
 
     (gsl-multiroot-fdfsolver-free s)
+    (gsl-multiroot-function-free F)
     (gsl-vector-free x)
     (gsl-vector-free y)
 ))
