@@ -1,5 +1,5 @@
 ;;; Array functions for Guile
-;;; Copyright (C) 2002   Arno W. Peters <a.w.peters@ieee.org>
+;;; Copyright (C) 2002, 2004   Arno W. Peters <a.w.peters@ieee.org>
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@
 	array-columns
 	array-add-constant
 	array-scale
+	array-elt-fun
 	array-add-elements
 	array-subtract-elements
 	array-multiply-elements
@@ -69,10 +70,10 @@ one less dimension than the original."
 ;;; array-map : func array1 array2 ... -> array
 ;;;
 (define (array-map func . arrays)
-  "apply FUNC to the lists formed by the elementwise concatenation of
-ARRAY1, ARRAY2, ... the results are stored at the same position in
-ARRAY.  This function is useful for element-wise operations on multiple
-arrays."
+  "(array-map func . arrays) applies FUNC to the lists formed by the
+elementwise concatenation of ARRAY1, ARRAY2, ... the results are
+stored at the same position in ARRAY.  This function is useful for
+element-wise operations on multiple arrays."
   (let ((v (apply make-array #f (array-shape (car arrays)))))
     (apply array-map! v func arrays)
     v))
@@ -199,31 +200,29 @@ more dimensions."
 (define (array-scale a b)
   (array->uniform-array (array-map (lambda (x) (* x b)) a)))
 
-(define (array-add-elements a b)
-  (let ((order (max (array-order a)
-		    (array-order b))))
-    (array->uniform-array (array-map +
-				     (ensure-array-order order a)
-				     (ensure-array-order order b)))))
+;;; Apply function elementwise
+(define (array-elt-fun func . mxs)
+  "(array-elt-fun func mx0 mx1 ...) applies function FUNC elementwise
+to the corresponding elements of each matrix.  This function is a
+generalization for the elementwise addition/subtraction/etc. of two
+matrices."
+  (let ((order (apply max (map array-order mxs))))
+    (array->uniform-array
+     (apply array-map
+	    func
+	    (map (lambda (m)
+		   (ensure-array-order order m))
+		 mxs)))))
 
-(define (array-subtract-elements a b)
-  (let ((order (max (array-order a)
-		    (array-order b))))
-    (array->uniform-array (array-map -
-				     (ensure-array-order order a)
-				     (ensure-array-order order b)))))
+(define (array-add-elements . mxs)
+  (apply array-elt-fun + mxs))
+
+(define (array-subtract-elements . mxs)
+  (apply array-elt-fun - mxs))
 
 ;;; Elementwise multiplication
-(define (array-multiply-elements a b)
-  (let ((order (max (array-order a)
-		    (array-order b))))
-    (array->uniform-array (array-map *
-				     (ensure-array-order order a)
-				     (ensure-array-order order b)))))
+(define (array-multiply-elements . mxs)
+  (apply array-elt-fun * mxs))
 
-(define (array-divide-elements a b)
-  (let ((order (max (array-order a)
-		    (array-order b))))
-    (array->uniform-array (array-map /
-				     (ensure-array-order order a)
-				     (ensure-array-order order b)))))
+(define (array-divide-elements . mxs)
+  (apply array-elt-fun / mxs))
