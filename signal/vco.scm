@@ -1,22 +1,31 @@
+;;; Signal generating elements
+;;; Copyright (C) 2003   Arno W. Peters <a.w.peters@ieee.org>
+;;;
+;;; This program is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 2 of the License, or (at
+;;; your option) any later version.
+;;;
+;;; This program is distributed in the hope that it will be useful, but
+;;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;;; General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with this program; if not, write to the Free Software
+;;; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+;;; USA
 
-;; gebruik voltage controlled oscilatoren (VCO) als basiselement om
-;; het menselijk oor te modelleren.  Een hele reeks VCOs voor
-;; verschillende frequentiebereiken zijn misschien in staat een goede
-;; benadering te geven voor de perceptie van geluid.
-;;
-;; Experimenten die duiden op VCO-achtige structuren in het oor.
-;;
-;; * een toon die in frequentie toeneemt en waarvan een deel vervangen
-;; wordt door ruis wordt waargenomen als een enkele toon zonder
-;; onderbreking.  Mogelijke verklaring: de VCO is gelocked op de toon
-;; en door de traagheid niet in staat om de de ruistoon snel te
-;; volgen.  Als de toon vervolgens doorgaat, lockt de VCO weer alsof
-;; er niets gebeurd is.
-;;
-;; * identieke geluidsfragmenten aan het einde van een verschillend
-;; geluidsfragment ervoor klinken anders.  Zie ''A critique of ... by
-;; ...'' voor een gedetailleerd uitleg.
+(define-module (signal generators)
+  :use-module (math const))
 
+(export make-amplifier
+	make-vco
+	make-pll
+	fold-phase)
+
+(define (fold-phase p)
+  (- p (* (* 2 pi) (round (/ p (* 2 pi))))))
 
 (define (make-amplifier gain)
   (lambda (x)
@@ -40,58 +49,11 @@ frequency range should be between 0 (DC) and pi (1/2 sample frequency)."
 			   (cosine-generator 1 center-freq 0
 					     (vector-length offset)))))
 
-;; (let* ((fs 44100)
-;;        (center-freq (* pi 0.125))
-;;        (vco (make-vco center-freq 0))
-;;        (offset (map (lambda (x) (* 0.01 x))
-;; 		    (list 0 1 -1 1 -1 1 -1 1 -1))))
-;;   (display (map vco offset))
-;;   (newline))
-
-(define (make-ear-element center-freq)
-  (let ((vco (make-vco center-freq 0))
-	(lf  (make-filter ...))
-	(lpf (make-filter ...))
-	(x_lf 0))
-    (lambda (x_in)
-      (let* ((x_vco (vco x_lf))
-	     (x_mult1 (* x_in (car x_vco)))
-	     (x_mult2 (* x_in (cadr x_vco))))
-	(set! x_lf (lf x_mult1))
-	(list x_lf (lpf x_mult2))))))
-
-
-;; make-butterworth-filter : number number -> (number -> number)
-;;
-;; (make-butterworth-filter f n) returns an n-th order butterworth
-;; filter with cutoff frequency f.  The frequency should be between 0
-;; (DC) and pi (1/2 sample frequency).
-(define (make-butterworth-filter cutoff order)
-  (let* ((expt-cutoff (expt (* 2 cutoff) order))
-	 (num (poly-mul (make-vector 1 expt-cutoff)
-			(poly-expt #(1 1) order)))
-	 (den (map-elts + (poly-expt #(-1 1) order) num)))
-    (make-filter num den)))
-
-;;; (run-test (display "impulse response butterworth filter")
-;;; 	  (let* ((cutoff (* pi 0.125))
-;;; 		 (lpf (make-butterworth-filter cutoff 1))
-;;; 		 (len 256)
-;;; 		 (impulse (list->vector (cons 1 (make-list 255 0)))))
-;;; 	    (semilogy (linear-generator 0 len)
-;;; 		      (serialize (lambda (x) (vector-map magnitude x))
-;;; 				 (lambda (x) (fft x))
-;;; 				 (lambda () (vector-map lpf impulse))))))
-
 ;; make-pll : 
-;;
-(define (make-pll center-freq gain lpf)
-  (let ((vco (make-vco center-freq 0))
-	(u 0)
-	(y 0))
+(define (make-pll vco sensitivity lpf)
+  (let ((y 0))
     (lambda (x)
-      (set! y (lpf u))
-      (set! u (* (vco (* gain y)) x))
+      (set! y (lpf (* (vco (* sensitivity y)) x)))
       y)))
 
 
