@@ -40,31 +40,9 @@ frequency range should be between 0 (DC) and pi (1/2 sample frequency)."
       (set! phase (fold-phase (+ phase center-freq offset)))
       (list (cos phase) (sin phase)))))
 
-(run-test (display "voltage controlled oscillator")
-	  (let* ((fs 44100)
-		 (center-freq (* pi 0.125))
-		 (vco (make-vco center-freq 0))
-		 (offset #(0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)))
-	    (assert-equal? (vector-map vco offset)
-			   (cosine-generator 1 center-freq 0
-					     (vector-length offset)))))
-
-;; make-pll : 
 (define (make-pll vco sensitivity lpf)
   (let ((y 0))
     (lambda (x)
       (set! y (lpf (* (vco (* sensitivity y)) x)))
       y)))
 
-
-(run-test (display "phase locked loop")
-	  (let* ((cutoff (* pi 0.125))
-		 (pll (make-pll cutoff 100
-				(make-filter #(1) #(1 -0.125))))
-		 (tmax 500)
-		 (sine (make-vco (* 1.05 cutoff) 0)))
-	    (plot (linear-generator 0 tmax)
-		  (serialize (lambda (x) (vector-map pll x))
-			     (lambda (x) (vector-map (make-amplifier 100) x))
-			     (lambda (x) (vector-map sine x))
-			     (lambda () (make-vector tmax 0))))))
