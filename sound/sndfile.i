@@ -42,7 +42,7 @@ void sf_info_free(SF_INFO *info)
 SF_INFO * sf_info_alloc(void);
 void sf_info_free(SF_INFO *info);
 
-%include "sndfile.inc"
+%include "sndfile_inc.i"
 
 %scheme %{
 (define my-so (dynamic-link "libguile-sndfile.la"))

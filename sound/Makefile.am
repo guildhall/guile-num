@@ -27,7 +27,7 @@ SUFFIXES = .i
   -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
   -o $@ $<
 
-sndfile.inc: /usr/include/sndfile.h
+sndfile_inc.i: /usr/include/sndfile.h
 	$(CPP) $< | $(PP) $< > $@
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) sndfile.scm
