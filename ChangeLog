@@ -1,3 +1,14 @@
+2004-01-05  Arno Peters  <a.w.peters@ieee.org>
+
+	* destill.scm: Clean up preprocessed header files to extract the
+	essentials for a SWIG interface.
+
+	* sound/Makefile.am: Added automatic destilation of the interfaces
+	from /usr/include/sndfile.h
+
+	* sound/.cvsignore: added sndfile.inc because it is automatically
+	generated.
+	
 2003-09-13  Arno Peters  <a.w.peters@ieee.org>
 
 	* configure.in: Released 0.4.0

@@ -9,6 +9,7 @@ SWIG_INTERFACES = \
 	sndfile.i
 
 BUILT_SOURCES = \
+	sndfile.inc
 	sndfile.c
 
 lib_LTLIBRARIES = \
@@ -17,10 +18,13 @@ lib_LTLIBRARIES = \
 libguile_sndfile_la_SOURCES =  sndfile.c
 libguile_sndfile_la_LDFLAGS = $(LDADD)
 
-SUFFIXES = .i
+SUFFIXES = .i .inc
 .i.c:
 	$(SWIG) $(SWIGFLAGS) \
   -scmstub $$(echo $< | sed 's/_/-/g' | sed 's/\.i/\.scm/') \
   -o $@ $<
+
+sndfile.inc: /usr/include/sndfile.h
+	$(CCP) $< | guile -s ../destill.scm > $@
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) sndfile.scm
