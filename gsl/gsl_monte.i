@@ -75,11 +75,6 @@ _wrap_gsl_monte_function_free (SCM s_0)
 
 %}
 
-%init %{
-    gh_new_procedure("gsl-monte-function-alloc", (swig_guile_proc) _wrap_gsl_monte_function_alloc, 2, 0, 0);
-    gh_new_procedure("gsl-monte-function-free", (swig_guile_proc) _wrap_gsl_monte_function_free, 1, 0, 0);
-%}
-
 extern gsl_monte_plain_state * gsl_monte_plain_alloc (size_t DIM);
 extern int gsl_monte_plain_init (gsl_monte_plain_state* S);
 extern int gsl_monte_plain_integrate (const gsl_monte_function * F, const double XL[], const double XU[], size_t DIM, size_t CALLS, gsl_rng * R, gsl_monte_plain_state * S, double * OUTPUT, double * OUTPUT);
@@ -171,7 +166,14 @@ extern int gsl_monte_vegas_init (gsl_monte_vegas_state* S);
 extern int gsl_monte_vegas_integrate (gsl_monte_function * F, double * XL, double * XU, size_t DIM, size_t CALLS, gsl_rng * R, gsl_monte_vegas_state * S, double * OUTPUT, double * OUTPUT);
 extern void gsl_monte_vegas_free (gsl_monte_vegas_state* S);
 
+%init %{
+    gh_new_procedure("gsl-monte-function-alloc", (swig_guile_proc) _wrap_gsl_monte_function_alloc, 2, 0, 0);
+    gh_new_procedure("gsl-monte-function-free", (swig_guile_proc) _wrap_gsl_monte_function_free, 1, 0, 0);
+%}
+
 %scheme %{
 (define my-so (dynamic-link "gsl/libguile-gsl-monte.so"))
 (dynamic-call "SWIG_init" my-so)
+
+(export gsl-monte-function-alloc gsl-monte-function-free)
 %}

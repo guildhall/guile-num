@@ -24,9 +24,9 @@
 			     (list (- 0.0 (* 2.0 mu x y) 1.0)
 				   (- (* mu (- (* x x) 1.0)))))))))
 
-(let ((s (gsl-odeiv-step-alloc (gsl-odeiv-step-rk8pd) dims))
-      (c (gsl-odeiv-control-y-new 1e-6 0.0))
-      (e (gsl-odeiv-evolve-alloc dims))
-      (sys (gsl-odeiv-system-alloc func jacobian dims)))
-  (let loop ()
+;;(let ((s (gsl-odeiv-step-alloc (gsl-odeiv-step-rk8pd) dims))
+;;      (c (gsl-odeiv-control-y-new 1e-6 0.0))
+;;      (e (gsl-odeiv-evolve-alloc dims))
+;;      (sys (gsl-odeiv-system-alloc func jacobian dims)))
+;;  (let loop ()
     

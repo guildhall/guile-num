@@ -169,4 +169,6 @@ void gsl_multimin_function_eval_fdf(gsl_multimin_function_fdf * f, const gsl_vec
 %scheme %{
 (define my-so (dynamic-link "gsl/libguile-gsl-multimin.so"))
 (dynamic-call "SWIG_init" my-so)
+
+(export gsl-multimin-function-fdf-alloc gsl-multimin-function-fdf-free)
 %}

@@ -177,4 +177,7 @@ double gsl_function_fdf_eval_df(gsl_function_fdf *fdf, double x);
 %scheme %{
 (define my-so (dynamic-link "gsl/libguile-gsl-function.so"))
 (dynamic-call "SWIG_init" my-so)
+
+(export gsl-function-alloc gsl-function-free
+        gsl-function-fdf-alloc gsl-function-fdf-free)
 %}
