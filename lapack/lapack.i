@@ -92,7 +92,9 @@ int gsl_dgels(int transpose, gsl_matrix * a, gsl_matrix * b)
 	else
 		trans = 'N';
 
-	lwork = 1 + m * n + (m * n + nrhs ) * nb;
+	lwork = -1;
+	dgels_(&trans, &m, &n, &nrhs,
+	       NULL, &lda, NULL, &ldb, NULL, &lwork, &info);
 	work = gsl_vector_alloc(lwork);
 	dgels_(&trans, &m, &n, &nrhs,
 	       gsl_matrix_ptr(a, 0, 0), &lda,
@@ -130,7 +132,9 @@ int gsl_zgels(int conjugate, gsl_matrix_complex * a, gsl_matrix_complex * b)
 	else
 		trans = 'N';
 
-	lwork = 1 + m * n + (m * n + nrhs ) * nb;
+	lwork = -1;
+	zgels_(&trans, &m, &n, &nrhs,
+	       NULL, &lda, NULL, &ldb, NULL, &lwork, &info);
 	work = gsl_vector_complex_alloc(lwork);
 	zgels_(&trans, &m, &n, &nrhs,
 	       gsl_matrix_complex_ptr(a, 0, 0), &lda,
