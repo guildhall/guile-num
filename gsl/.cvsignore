@@ -1,2 +1,3 @@
 gsl_*_wrap.c
 gsl-*.scm
+Makefile.in

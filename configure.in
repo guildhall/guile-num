@@ -9,6 +9,7 @@ AM_MAINTAINER_MODE
 AC_PROG_CC
 AC_ISC_POSIX
 AC_PROG_F77
+AC_F77_LIBRARY_LDFLAGS
 AC_PROG_LIBTOOL
 
 CFLAGS="$CFLAGS `gsl-config --cflags`"
@@ -17,4 +18,6 @@ LIBS="$LIBS `gsl-config --libs`"
 CFLAGS="$CFLAGS `guile-config compile`"
 LIBS="$LIBS `guile-config link`"
 
-AC_OUTPUT([Makefile finance/Makefile gsl/Makefile])
+AC_OUTPUT([Makefile finance/Makefile gsl/Makefile
+	   lapack/Makefile math/Makefile plot/Makefile
+	   signal/Makefile sound/Makefile])

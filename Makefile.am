@@ -1,2 +1,1 @@
-SUBDIRS = finance gsl
-# lapack math plot signal sound
+SUBDIRS = finance gsl lapack math plot signal sound
