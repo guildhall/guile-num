@@ -44,6 +44,7 @@
   "Convert an ERB-rate value to a frequency in Hz"
   (let ((a 676170.4)
 	(b 47.06538)
+	(c 0.08950404)
 	(d 14678.49))
     (- (/ a (- b (exp (* c e)))) d)))
 
