@@ -39,6 +39,8 @@ GSL_HEADERFILES =				\
 	gsl_roots.h				\
 	gsl_sf.h				\
 	gsl_siman.h				\
+	gsl_sort.h				\
+	gsl_sort_vector.h			\
 	gsl_spline.h				\
 	gsl_statistics.h			\
 	gsl_sum.h				\
@@ -84,13 +86,12 @@ lib_LTLIBRARIES =				\
 	libguile-gsl-roots.la			\
 	libguile-gsl-siman.la			\
 	libguile-gsl-sf.la			\
+	libguile-gsl-sort.la			\
+	libguile-gsl-sort-vector.la		\
 	libguile-gsl-spline.la			\
 	libguile-gsl-sum.la			\
 	libguile-gsl-statistics.la		\
 	libguile-gsl-vector.la
-
-#	libguile-gsl-odeiv.la \
-#
 
 libguile_gsl_blas_la_SOURCES =  gsl_blas.c
 libguile_gsl_blas_la_LDFLAGS = $(LDADD)
@@ -154,6 +155,10 @@ libguile_gsl_siman_la_SOURCES = gsl_siman.c
 libguile_gsl_siman_la_LDFLAGS = $(LDADD)
 libguile_gsl_sf_la_SOURCES = gsl_sf.c
 libguile_gsl_sf_la_LDFLAGS = $(LDADD)
+libguile_gsl_sort_la_SOURCES = gsl_sort.c
+libguile_gsl_sort_la_LDFLAGS = $(LDADD)
+libguile_gsl_sort_vector_la_SOURCES = gsl_sort_vector.c
+libguile_gsl_sort_vector_la_LDFLAGS = $(LDADD)
 libguile_gsl_spline_la_SOURCES = gsl_spline.c
 libguile_gsl_spline_la_LDFLAGS = $(LDADD)
 libguile_gsl_sum_la_SOURCES = gsl_sum.c
@@ -212,7 +217,10 @@ gsl_histogram2d.inc: /usr/include/gsl/gsl_histogram2d.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_histogram2d.*' > $@
 
 gsl_integration.inc: /usr/include/gsl/gsl_integration.h
-	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_integration.*' > $@
+	$(CPP) $^ | \
+	$(PP) '/usr/include/gsl/gsl_integration.*' | \
+	sed 's/result/OUTPUT/g;' | \
+	sed 's/abserr/OUTPUT/g;' > $@
 
 gsl_interp.inc: /usr/include/gsl/gsl_interp.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_interp.*' > $@
@@ -220,8 +228,8 @@ gsl_interp.inc: /usr/include/gsl/gsl_interp.h
 gsl_linalg.inc: /usr/include/gsl/gsl_linalg.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_linalg.*' > $@
 
-gsl_math.inc: /usr/include/gsl/gsl_math.h
-	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_math.*' > $@
+gsl_math.inc: /usr/include/gsl/gsl_math.h /usr/include/gsl/gsl_complex_math.h
+	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_(complex_|)math.*' > $@
 
 gsl_matrix.inc: /usr/include/gsl/gsl_matrix.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_matrix.*' > $@
@@ -230,7 +238,10 @@ gsl_min.inc: /usr/include/gsl/gsl_min.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_min.*' > $@
 
 gsl_monte.inc: /usr/include/gsl/gsl_monte*.h
-	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_monte.*' > $@
+	$(CPP) $^ | \
+	$(PP) '/usr/include/gsl/gsl_monte.*' | \
+	sed 's/double *\* *result/double *OUTPUT/g;' | \
+	sed 's/double *\* *abserr/double *OUTPUT/g;' > $@
 
 gsl_multifit.inc: /usr/include/gsl/gsl_multifit.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_multifit.*' > $@
@@ -267,6 +278,12 @@ gsl_sf.inc: /usr/include/gsl/gsl_sf.h
 
 gsl_siman.inc: /usr/include/gsl/gsl_siman.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_siman.*' > $@
+
+gsl_sort.inc: /usr/include/gsl/gsl_sort.h
+	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_sort.*' > $@
+
+gsl_sort_vector.inc: /usr/include/gsl/gsl_sort_vector.h
+	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_sort_vector.*' > $@
 
 gsl_spline.inc: /usr/include/gsl/gsl_spline.h
 	$(CPP) $^ | $(PP) '/usr/include/gsl/gsl_spline.*' > $@

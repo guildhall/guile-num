@@ -160,8 +160,6 @@ int gsl_zgels(int conjugate, gsl_matrix_complex * a, gsl_matrix_complex * b);
 
 %scheme %{
 (use-modules (math array-fun)
-	     (gsl vector)
-	     (gsl matrix)
              (gsl gsl-math)
              (gsl gsl-vector)
 	     (gsl gsl-matrix))

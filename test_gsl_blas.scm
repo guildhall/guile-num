@@ -1,4 +1,5 @@
-(use-modules (gsl gsl-blas))
+(use-modules (gsl gsl-blas)
+	     (ice-9 format))
 
 
 (let ((alpha 1.0)
@@ -10,8 +11,8 @@
       (beta 0.0)
       (C #2i((0.0 0.0)
 	     (0.0 0.0))))
-  (display (blas-dgemm 'no-transpose 'no-transpose alpha A B beta C))
-  (newline))
+  (format #t "blas-dgemm: ~A\n"
+	  (blas-dgemm 'no-transpose 'no-transpose alpha A B beta C)))
 
 (let ((alpha 1.0+0i)
       (A #2c((0.11   0.12 0.13)
@@ -22,5 +23,6 @@
       (beta 0.0+0i)
       (C #2c((0.0 0.0)
 	     (0.0 0.0))))
-  (display (blas-zgemm 'no-transpose 'no-transpose alpha A B beta C))
-  (newline))
+  (format #t "blas-zgemm: ~A\n"
+	  (blas-zgemm 'no-transpose 'no-transpose alpha A B beta C)))
+

@@ -1,5 +1,5 @@
 (use-modules (gsl gsl-math)
-	     (gsl vector)
+	     (gsl gsl-vector)
 	     (lapack lapack))
 
 (display "Testing dgesv\n")

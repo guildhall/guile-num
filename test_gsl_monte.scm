@@ -1,8 +1,9 @@
-(use-modules (gsl gsl-math))
-(use-modules (gsl gsl-vector))
-(use-modules (math array-fun))
-(use-modules (gsl gsl-rng))
-(use-modules (gsl gsl-monte))
+(use-modules (ice-9 format)
+	     (math array-fun)
+	     (gsl gsl-math)
+	     (gsl gsl-vector)
+	     (gsl gsl-rng)
+	     (gsl gsl-monte))
 
 ;;; Computation of the integral,
 ;;;
@@ -17,8 +18,8 @@
 ;;; This script runs approximately 15x slower than the compiled
 ;;; example in C from the GSL reference manual.
 ;;;
-;;; C compiled: real:  2.8 , user:  1.78
-;;; Guile     : real: 40.94, user: 26.60
+;;;   C compiled: real:  2.8 , user:  1.78
+;;;   Guile     : real: 40.94, user: 26.60
 
 (gsl-rng-env-setup)
 
@@ -27,26 +28,13 @@
 (define dims 3)
 
 (define (display-results title exact result abserr)
-  (display title) (display " ===========\n")
-  (display "result = ")
-  (display result)
-  (newline)
-
-  (display "sigma = ")
-  (display abserr)
-  (newline)
-
-  (display "exact = ")
-  (display exact)
-  (newline)
-
-  (display "error = ")
-  (display (- result exact))
-  (display " = ")
-  (display (abs (/ (- result exact) abserr)))
-  (display " sigma")
-  (newline))
-
+  (format #t "~A ===========\n" title)
+  (format #t "result = ~F\n" result)
+  (format #t "sigma = ~F\n" abserr)
+  (format #t "exact = ~F\n" exact)
+  (format #t "error = ~F = ~F sigma\n"
+	  (- result exact)
+	  (abs (/ (- result exact) abserr))))
 
 (define C
   (/ 1.0 (* pi pi pi)))
@@ -69,8 +57,7 @@
     (call-with-values
      (lambda ()
        (gsl-monte-plain-integrate f
-				  (gsl-vector-data xl)
-				  (gsl-vector-data xu)
+				  (gsl-vector-data xl) (gsl-vector-data xu)
 				  dims calls r s))
      (lambda (errno result abserr)
        (display-results "plain" exact result abserr)))
@@ -81,8 +68,7 @@
     (call-with-values
      (lambda ()
        (gsl-monte-miser-integrate f
-				  (gsl-vector-data xl)
-				  (gsl-vector-data xu)
+				  (gsl-vector-data xl) (gsl-vector-data xu)
 				  dims calls r s))
      (lambda (errno result abserr)
        (display-results "miser" exact result abserr)))
@@ -93,8 +79,7 @@
     (call-with-values
      (lambda ()
        (gsl-monte-vegas-integrate f
-				  (gsl-vector-data xl)
-				  (gsl-vector-data xu)
+				  (gsl-vector-data xl) (gsl-vector-data xu)
 				  dims calls r s))
      (lambda (errno result abserr)
        (display-results "vegas warm-up" exact result abserr)))
@@ -108,11 +93,10 @@
 				    (gsl-vector-data xu)
 				    dims (* 10 calls) r s))
        (lambda (errno result abserr)
-	 (display "result = ") (display result)
-	 (display " sigma = ") (display abserr)
-	 (display " chisq/dof = ")
-	 (display (gsl-monte-vegas-state-chisq-get s))
-	 (newline)
+	 (format #t "result = ~A\nsigma = ~A\nchisq/dof = ~A\n"
+		 result
+		 abserr
+		 (gsl-monte-vegas-state-chisq-get s))
 	 (cond ((< (abs (- (gsl-monte-vegas-state-chisq-get s)
 			   1.0)) 0.5)
 		(display-results "vegas final"

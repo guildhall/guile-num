@@ -1,5 +1,6 @@
-(use-modules (gsl gsl-vector))
-(use-modules (gsl gsl-statistics))
+(use-modules (gsl gsl-vector)
+	     (gsl gsl-sort-vector)
+	     (gsl gsl-statistics))
 
 (define (gsl-vector-display v)
   (let ((x (gsl-vector->vector v)))

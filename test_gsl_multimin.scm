@@ -1,11 +1,8 @@
-(use-modules (gsl gsl-errno))
-(use-modules (gsl gsl-vector))
-(use-modules (gsl gsl-matrix))
-(use-modules (gsl gsl-multimin))
-(use-modules (ice-9 format))
-
-(define (cout . args)
-  (apply format (current-output-port) args))
+(use-modules (gsl gsl-errno)
+	     (gsl gsl-vector)
+	     (gsl gsl-matrix)
+	     (gsl gsl-multimin)
+	     (ice-9 format))
 
 (define (paraboloid a b)
   (lambda (x)
@@ -32,7 +29,7 @@
 	(F (gsl-multimin-function-fdf-alloc f df dim))
 	(x (vector->gsl-vector x-init)))
 
-    (cout "using ~A method\n" (gsl-multimin-fdfminimizer-name s))
+    (format #t "using ~A method\n" (gsl-multimin-fdfminimizer-name s))
 
     (gsl-multimin-fdfminimizer-set s F x 0.01 1e-4)
     (let loop ((iter 1))
@@ -42,13 +39,14 @@
 		     (gsl-multimin-fdfminimizer-gradient-get s)
 		     1e-3)))
 	(if (= status (GSL-SUCCESS))
-	    (cout "Minimum found at:\n"))
+	    (format #t "Minimum found at:\n"))
 
-	(cout "~5D ~5F ~5F ~10F\n"
-	      iter
-	      (gsl-vector-get (gsl-multimin-fdfminimizer-x-get s) 0)
-	      (gsl-vector-get (gsl-multimin-fdfminimizer-x-get s) 1)
-	      (gsl-multimin-fdfminimizer-f-get s))
+	(format #t
+		"~5D ~5F ~5F ~10F\n"
+		iter
+		(gsl-vector-get (gsl-multimin-fdfminimizer-x-get s) 0)
+		(gsl-vector-get (gsl-multimin-fdfminimizer-x-get s) 1)
+		(gsl-multimin-fdfminimizer-f-get s))
 
 	(if (and (= status (GSL-CONTINUE))
 		 (< iter 100))

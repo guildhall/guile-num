@@ -75,7 +75,6 @@ _wrap_gsl_monte_function_free (SCM s_0)
 
 %}
 
- 
 %include "gsl_monte.inc"
 
 %init %{

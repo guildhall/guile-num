@@ -90,6 +90,12 @@ gsl_complex * gsl_complex_alloc (void);
 void gsl_complex_free (gsl_complex * Z);
 void gsl_complex_copy (gsl_complex * TARGET, gsl_complex * SOURCE);
 
+double gsl_real (gsl_complex * Z);
+double gsl_imag (gsl_complex * Z);
+void gsl_set_complex (gsl_complex * ZP, double X, double Y);
+void gsl_set_real (gsl_complex * ZP, double X);
+void gsl_set_imag (gsl_complex * ZP, double Y);
+
 %include "gsl_math.inc"
 
 %scheme %{
@@ -105,5 +111,4 @@ void gsl_complex_copy (gsl_complex * TARGET, gsl_complex * SOURCE);
 
 (define (gsl-complex->complex z)
   (+ (gsl-real z) (* +i (gsl-imag z))))
-
 %}
