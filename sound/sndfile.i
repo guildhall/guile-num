@@ -28,6 +28,7 @@ SF_INFO * sf_info_alloc(void)
 	SF_INFO *info;
 
 	info = (SF_INFO *) malloc(sizeof(SF_INFO));
+	memset(info, sizeof(SF_INFO), 0);
 	return info;
 }
 
