@@ -1,7 +1,7 @@
 SWIG = swig
 SWIGFLAGS = -guile -c
 CC = gcc
-LD = g77-3.2
+LD = g77
 CFLAGS = -g -O2 -DHAVE_INLINE
 LDFLAGS = -shared -lswigguile -L/usr/lib/atlas -llapack -lblas
 
