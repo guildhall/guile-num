@@ -28,3 +28,8 @@ extern int gsl_eigen_hermv (gsl_matrix_complex * A, gsl_vector * EVAL, gsl_matri
 
 extern int gsl_eigen_symmv_sort (gsl_vector * EVAL, gsl_matrix * EVEC, gsl_eigen_sort_t SORT_TYPE);
 extern int gsl_eigen_hermv_sort (gsl_vector * EVAL, gsl_matrix_complex * EVEC, gsl_eigen_sort_t SORT_TYPE);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-eigen.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

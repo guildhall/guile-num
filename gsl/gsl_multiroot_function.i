@@ -254,3 +254,8 @@ void gsl_multiroot_function_eval_fdf(gsl_multiroot_function_fdf * f, const gsl_v
     gh_new_procedure("gsl-multiroot-function-fdf-alloc", (swig_guile_proc) _wrap_gsl_multiroot_function_fdf_alloc, 3, 0, 0);
     gh_new_procedure("gsl-multiroot-function-fdf-free", (swig_guile_proc) _wrap_gsl_multiroot_function_fdf_free, 1, 0, 0);
 %}
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-statistics.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -19,3 +19,8 @@ extern int gsl_combination_prev (gsl_combination * C);
 extern int gsl_combination_fwrite (FILE * STREAM, const gsl_combination * C);
 extern int gsl_combination_fread (FILE * STREAM, gsl_combination * C);int gsl_combination_fprintf (FILE * STREAM, const gsl_combination * C, const char *FORMAT);
 extern int gsl_combination_fscanf (FILE * STREAM, gsl_combination * C);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-combination.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

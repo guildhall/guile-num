@@ -18,3 +18,8 @@ extern gsl_multifit_linear_workspace * gsl_multifit_linear_alloc (size_t N, size
 extern void gsl_multifit_linear_free (gsl_multifit_linear_workspace * WORK);
 extern int gsl_multifit_linear (const gsl_matrix * X, const gsl_vector * Y, gsl_vector * C, gsl_matrix * COV, double * OUTPUT, gsl_multifit_linear_workspace * WORK);
 extern int gsl_multifit_wlinear (const gsl_matrix * X, const gsl_vector * W, const gsl_vector * Y, gsl_vector * C, gsl_matrix * COV, double * OUTPUT, gsl_multifit_linear_workspace * WORK);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-fit.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -16,3 +16,7 @@ extern void gsl_block_complex_free (gsl_block_complex * B);
 extern size_t gsl_block_complex_size (const gsl_block_complex * b);
 extern double * gsl_block_complex_data (const gsl_block_complex * b);
 
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-block.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

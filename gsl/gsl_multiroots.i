@@ -59,3 +59,8 @@ extern gsl_vector * gsl_multiroot_fdfsolver_dx (const gsl_multiroot_fdfsolver * 
 
 extern int gsl_multiroot_test_delta (const gsl_vector * DX, const gsl_vector * X, double EPSABS, double EPSREL);
 extern int gsl_multiroot_test_residual (const gsl_vector * F, double EPSABS);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-multiroots.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -7,6 +7,7 @@
 #include <gsl/gsl_odeiv.h>
 
 
+#if 0
 static int
 _wrap_guile_ode_function (double t,
 			  const double y[],
@@ -70,7 +71,7 @@ _wrap_guile_ode_jacobian (double t,
 	}
 	return GSL_SUCCESS;
 }
-
+#endif
 static SCM
 _wrap_gsl_odeiv_system_alloc (SCM s_0, SCM s_1, SCM s_2)
 {
@@ -82,8 +83,10 @@ _wrap_gsl_odeiv_system_alloc (SCM s_0, SCM s_1, SCM s_2)
 
     gh_defer_ints();
     result = (gsl_odeiv_system *) malloc(sizeof(gsl_odeiv_system));
+#if 0
     result->function = _wrap_guile_ode_function;
     result->jacobian = _wrap_guile_ode_jacobian;
+#endif
     result->dimension = gh_scm2int(s_2);
     result->params = (void *) SCM_LIST3(s_2, s_0, s_1);
     
@@ -157,4 +160,5 @@ extern void gsl_odeiv_evolve_free (gsl_odeiv_evolve * E);
     gh_new_procedure("gsl-odeiv-system-alloc", (swig_guile_proc) _wrap_gsl_odeiv_system_alloc, 3, 0, 0);
     gh_new_procedure("gsl-odeiv-system-free", (swig_guile_proc) _wrap_gsl_odeiv_system_free, 1, 0, 0);
 %}
+
 

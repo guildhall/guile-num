@@ -102,3 +102,8 @@ extern gsl_histogram2d_pdf * gsl_histogram2d_pdf_alloc (size_t nx, size_t ny);
 extern int gsl_histogram2d_pdf_init (gsl_histogram2d_pdf * P, const gsl_histogram2d * H);
 extern void gsl_histogram2d_pdf_free (gsl_histogram2d_pdf * P);
 extern int gsl_histogram2d_pdf_sample (const gsl_histogram2d_pdf * P, double R1, double R2, double * X, double * Y);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-histogram.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -170,3 +170,8 @@ extern gsl_complex gsl_complex_arctanh_real (double Z);
 extern gsl_complex gsl_complex_arcsech (gsl_complex Z);
 extern gsl_complex gsl_complex_arccsch (gsl_complex Z);
 extern gsl_complex gsl_complex_arccoth (gsl_complex Z);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-math.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -34,3 +34,8 @@ extern int gsl_integration_qawo_table_set_length (gsl_integration_qawo_table * T
 extern void gsl_integration_qawo_table_free (gsl_integration_qawo_table * T);
 extern int gsl_integration_qawo (gsl_function * F, const double A, const double EPSABS, const double EPSREL, const size_t LIMIT, gsl_integration_workspace * WORKSPACE, gsl_integration_qawo_table * WF, double *OUTPUT, double *OUTPUT);
 extern int gsl_integration_qawf (gsl_function * F, const double A, const double EPSABS, const size_t LIMIT, gsl_integration_workspace * WORKSPACE, gsl_integration_workspace * CYCLE_WORKSPACE, gsl_integration_qawo_table * WF, double *OUTPUT, double *OUTPUT);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-integration.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

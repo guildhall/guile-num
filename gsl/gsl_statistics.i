@@ -50,3 +50,8 @@ extern void gsl_stats_minmax_index (size_t * OUTPUT, size_t * OUTPUT, const doub
 
 extern double gsl_stats_median_from_sorted_data (const double SORTED_DATA[], size_t STRIDE, size_t N);
 extern double gsl_stats_quantile_from_sorted_data (const double SORTED_DATA[], size_t STRIDE, size_t N, double F);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-statistics.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -146,3 +146,8 @@ extern void gsl_sort_vector_smallest (double * DEST, size_t K, const gsl_vector 
 extern void gsl_sort_vector_largest (double * DEST, size_t K, const gsl_vector * V);
 extern void gsl_sort_vector_smallest_index (size_t * P, size_t K, const gsl_vector * V);
 extern void gsl_sort_vector_largest_index (size_t * P, size_t K, const gsl_vector * V);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-vector.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

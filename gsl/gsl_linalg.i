@@ -70,3 +70,8 @@ extern int gsl_linalg_HH_solve (gsl_matrix * A, const gsl_vector * B, gsl_vector
 extern int gsl_linalg_HH_svx (gsl_matrix * A, gsl_vector * X);
 extern int gsl_linalg_solve_symm_tridiag (const gsl_vector * DIAG, const gsl_vector * E, const gsl_vector * B, gsl_vector * X);
 extern int gsl_linalg_solve_symm_cyc_tridiag (const gsl_vector * DIAG, const gsl_vector * E, const gsl_vector * B, gsl_vector * X);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-linalg.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -33,3 +33,8 @@ extern double gsl_root_fsolver_x_upper (const gsl_root_fsolver * S);
 extern int gsl_root_test_interval (double X_LOWER, double X_UPPER, double EPSABS, double EPSREL);
 extern int gsl_root_test_delta (double X1, double X0, double EPSREL, double EPSABS);
 extern int gsl_root_test_residual (double F, double EPSABS);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-roots.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

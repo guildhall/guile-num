@@ -119,3 +119,8 @@ extern double gsl_ran_logarithmic_pdf (unsigned int K, double P);
 extern void gsl_ran_shuffle (const gsl_rng * R, void * BASE, size_t N, size_t SIZE);
 extern int gsl_ran_choose (const gsl_rng * R, void * DEST, size_t K, void * SRC, size_t N, size_t SIZE);
 extern void gsl_ran_sample (const gsl_rng * R, void * DEST, size_t K, void * SRC, size_t N, size_t SIZE);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-randist.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

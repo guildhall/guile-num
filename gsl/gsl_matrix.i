@@ -130,3 +130,8 @@ void gsl_matrix_complex_set_real_imag (gsl_matrix_complex * M, size_t I, size_t 
 extern void gsl_matrix_complex_set_all (gsl_matrix_complex * M, gsl_complex X);
 extern void gsl_matrix_complex_set_zero (gsl_matrix_complex * M);
 extern int gsl_matrix_complex_memcpy (gsl_matrix_complex * DEST, const gsl_matrix_complex * SRC);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-matrix.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

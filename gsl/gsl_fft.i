@@ -66,3 +66,8 @@ extern int gsl_fft_real_transform (double DATA[], size_t STRIDE, size_t N, const
 extern int gsl_fft_halfcomplex_transform (double DATA[], size_t STRIDE, size_t N, const gsl_fft_halfcomplex_wavetable * WAVETABLE, gsl_fft_real_workspace * WORK);
 extern int gsl_fft_real_unpack (const double REAL_COEFFICIENT[], gsl_complex_packed_array COMPLEX_COEFFICIENT, size_t STRIDE, size_t N);
 extern int gsl_fft_halfcomplex_unpack (const double HALFCOMPLEX_COEFFICIENT[], gsl_complex_packed_array COMPLEX_COEFFICIENT, size_t STRIDE, size_t N);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-fft.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -173,3 +173,8 @@ double gsl_function_fdf_eval_df(gsl_function_fdf *fdf, double x);
     gh_new_procedure("gsl-function-fdf-alloc", (swig_guile_proc) _wrap_gsl_function_fdf_alloc, 2, 0, 0);
     gh_new_procedure("gsl-function-fdf-free", (swig_guile_proc) _wrap_gsl_function_fdf_free, 1, 0, 0);
 %}
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-function.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

@@ -17,3 +17,8 @@ extern int gsl_poly_complex_solve_cubic (double A, double B, double C, gsl_compl
 extern gsl_poly_complex_workspace * gsl_poly_complex_workspace_alloc (size_t N);
 extern void gsl_poly_complex_workspace_free (gsl_poly_complex_workspace * W);
 extern int gsl_poly_complex_solve (const double * A, size_t N, gsl_poly_complex_workspace * W, gsl_complex_packed_ptr Z);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-poly.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

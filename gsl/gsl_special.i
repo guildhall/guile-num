@@ -273,3 +273,9 @@ extern double gsl_sf_hzeta (double S, double Q);
 extern double gsl_sf_eta_int (int N);
 extern double gsl_sf_eta (double S);
 
+
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-special.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

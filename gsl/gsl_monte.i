@@ -171,3 +171,7 @@ extern int gsl_monte_vegas_init (gsl_monte_vegas_state* S);
 extern int gsl_monte_vegas_integrate (gsl_monte_function * F, double * XL, double * XU, size_t DIM, size_t CALLS, gsl_rng * R, gsl_monte_vegas_state * S, double * OUTPUT, double * OUTPUT);
 extern void gsl_monte_vegas_free (gsl_monte_vegas_state* S);
 
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-monte.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

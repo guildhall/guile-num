@@ -35,3 +35,8 @@ extern int gsl_sum_levin_u_accel (const double * ARRAY, size_t ARRAY_SIZE, gsl_s
 extern gsl_sum_levin_utrunc_workspace * gsl_sum_levin_utrunc_alloc (size_t N);
 extern void gsl_sum_levin_utrunc_free (gsl_sum_levin_utrunc_workspace * W);
 extern int gsl_sum_levin_utrunc_accel (const double * ARRAY, size_t ARRAY_SIZE, gsl_sum_levin_utrunc_workspace * W, double * OUTPUT , double * OUTPUT);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-levin.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

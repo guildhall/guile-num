@@ -66,3 +66,7 @@ void guile_gsl_error_handler (const char * reason, const char * file,
 previous_error_handler = gsl_set_error_handler(guile_gsl_error_handler);
 %}
 
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-errno.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

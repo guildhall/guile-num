@@ -212,3 +212,8 @@ extern int gsl_blas_zher2k (CBLAS_UPLO_t UPLO,
 			    const gsl_matrix_complex * B,
 			    double BETA,
 			    gsl_matrix_complex * C);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-blas.so"))
+(dynamic-call "SWIG_init" my-so)
+%}

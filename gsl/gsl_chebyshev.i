@@ -26,3 +26,8 @@ extern double gsl_cheb_eval_n (const gsl_cheb_series * CS, size_t ORDER, double 
 extern int gsl_cheb_eval_n_err (const gsl_cheb_series * CS, const size_t ORDER, const double X, double * OUTPUT, double * OUTPUT);
 extern int gsl_cheb_calc_deriv (gsl_cheb_series * DERIV, const gsl_cheb_series * CS);
 extern int gsl_cheb_calc_integ (gsl_cheb_series * INTEG, const gsl_cheb_series * CS);
+
+%scheme %{
+(define my-so (dynamic-link "gsl/libguile-gsl-chebyshev.so"))
+(dynamic-call "SWIG_init" my-so)
+%}
