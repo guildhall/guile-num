@@ -4,7 +4,9 @@ CC = gcc
 CFLAGS = -g -O2 -DHAVE_INLINE -c -fpic -I/usr/include
 LDFLAGS = -shared -lswigguile -lgsl -lgslcblas
 
-all: libguile-gsl-math.so libguile-gsl-block.so libguile-gsl-vector.so libguile-gsl-matrix.so libguile-gsl-blas.so libguile-gsl-special.so libguile-gsl-errno.so libguile-gsl-poly.so libguile-gsl-permute.so libguile-gsl-combination.so libguile-gsl-linalg.so libguile-gsl-eigen.so libguile-gsl-fft.so libguile-gsl-integration.so libguile-gsl-rng.so libguile-gsl-qrng.so libguile-gsl-randist.so libguile-gsl-statistics.so libguile-gsl-histogram.so libguile-gsl-monte.so libguile-gsl-odeiv.so libguile-gsl-interp.so libguile-gsl-function.so libguile-gsl-diff.so libguile-gsl-chebyshev.so libguile-gsl-levin.so libguile-gsl-dht.so libguile-gsl-roots.so libguile-gsl-minimize.so libguile-gsl-multiroots.so libguile-gsl-fit.so libguile-gsl-multimin.so
+all: libguile-gsl-math.so libguile-gsl-block.so libguile-gsl-vector.so libguile-gsl-matrix.so libguile-gsl-blas.so libguile-gsl-special.so libguile-gsl-errno.so libguile-gsl-poly.so libguile-gsl-permute.so libguile-gsl-combination.so libguile-gsl-linalg.so libguile-gsl-eigen.so libguile-gsl-fft.so libguile-gsl-integration.so libguile-gsl-rng.so libguile-gsl-qrng.so libguile-gsl-randist.so libguile-gsl-statistics.so libguile-gsl-histogram.so libguile-gsl-monte.so libguile-gsl-interp.so libguile-gsl-function.so libguile-gsl-diff.so libguile-gsl-chebyshev.so libguile-gsl-levin.so libguile-gsl-dht.so libguile-gsl-roots.so libguile-gsl-minimize.so libguile-gsl-multiroots.so libguile-gsl-fit.so libguile-gsl-multimin.so
+
+# libguile-gsl-odeiv.so is not ready for consumption
 
 dist: clean
 
