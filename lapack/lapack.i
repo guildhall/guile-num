@@ -160,9 +160,9 @@ int gsl_zgels(int conjugate, gsl_matrix_complex * a, gsl_matrix_complex * b);
 
 %scheme %{
 (use-modules (math array-fun)
-             (gsl gsl-math)
-             (gsl gsl-vector)
-	     (gsl gsl-matrix))
+             (gsl math)
+             (gsl vector)
+	     (gsl matrix))
 
 (define my-so (dynamic-link "libguile-lapack.la"))
 (dynamic-call "scm_init_lapack_lapack_module" my-so)
