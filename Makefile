@@ -5,6 +5,7 @@ GUILE = guile
 all:
 	$(MAKE) -C gsl all
 	$(MAKE) -C lapack all
+	$(MAKE) -C sound all
 
 dist: clean
 	$(MAKE) -C gsl dist
@@ -13,11 +14,13 @@ dist: clean
 clean:
 	$(MAKE) -C gsl clean
 	$(MAKE) -C lapack clean
+	$(MAKE) -C sound clean
 	find -name "*~" | xargs $(RM)
 
 maintainer-clean:
 	$(MAKE) -C gsl maintainer-clean
 	$(MAKE) -C lapack maintainer-clean
+	$(MAKE) -C sound maintainer-clean
 
 check:
 	-$(GUILE) -s test_gsl_blas.scm

@@ -18,13 +18,14 @@
 
 (define-module (signal filter)
   :use-module (ice-9 slib)
-  :use-module (math array-fun))
+  :use-module (math array-fun)
+  :use-module (ice-9 syncase))
 
 (export make-fixed-iir-filter
 	make-adaptive-iir-filter
 	iir-filter)
 
-(require 'macro-by-example)
+;;(require 'macro-by-example)
 
 (define-syntax iterate-filter
   (syntax-rules 
@@ -51,8 +52,8 @@
   "Returns a function that filters its argument"
   (if (= (uniform-vector-ref den 0) 0.0)
       (error "the first element of the denominator must be non-zero"))
-  (let* ((len   (-1+ (max (uniform-vector-length num)
-			  (uniform-vector-length den))))
+  (let* ((len   (+ -1 (max (uniform-vector-length num)
+			   (uniform-vector-length den))))
 	 (state (if (null? init)
 		    (make-array 0.0 len)
 		    (car init)))
@@ -69,8 +70,8 @@
     (lambda (num den x)
       (if (= (uniform-vector-ref den 0) 0.0)
 	  (error "the first element of the denominator must be non-zero"))
-      (if (not (= len (-1+ (max (uniform-vector-length num)
-				(uniform-vector-length den)))))
+      (if (not (= len (+ -1 (max (uniform-vector-length num)
+				 (uniform-vector-length den)))))
 	  (error "state and filter polynomials are incompatible"))
       (let* ((normalize (lambda (x) (/ x (uniform-vector-ref den 0))))
 	     (num   (array-map normalize (vector-resize num (+ len 1) 0.0)))
@@ -82,7 +83,7 @@
 initial values @var{init}."
   (if (= (uniform-vector-ref den 0) 0.0)
       (error "filter: the first element of the denominator must be non-zero"))
-  (let* ((len   (-1+ (max (uniform-vector-length num)
+  (let* ((len   (+ -1 (max (uniform-vector-length num)
 			  (uniform-vector-length den))))
 	 (state (if (null? init)
 		    (make-vector len 0.0)
