@@ -1,5 +1,5 @@
 SWIG = swig
-SWIGFLAGS = -guile -scmstub -Linkage module -outdir ..
+SWIGFLAGS = -guile -gh -scmstub -Linkage module -outdir ..
 PP = $(top_srcdir)/destill.scm
 
 AM_CFLAGS = $(GUILE_CFLAGS)

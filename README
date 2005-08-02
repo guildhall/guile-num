@@ -12,3 +12,10 @@ Dependencies:
 * gcc
 * g77 (for properly linking LAPACK)
 
+
+Building Guile-numerics for Debian is as simple as:
+
+  ./autogen.sh
+  dpkg-buildpackage -us -uc -rfakeroot
+
+if all dependencies are met, the build should succeed.

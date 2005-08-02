@@ -2,7 +2,7 @@ Source: guile-numerics
 Section: contrib
 Priority: optional
 Maintainer: Arno Peters <a.w.peters@ieee.org>
-Build-Depends: debhelper (>> 3.0.0), swig1.3 (>= 1.3.17-1), libgsl0-dev (>= 1.3-1), lapack-dev (>=3.0.20000531a-22), fftw3-dev (>= 2.1.3-15), libsndfile1-dev (>= 1.0.3-1), guile-1.6-dev
+Build-Depends: debhelper (>> 3.0.0), swig1.3 (>= 1.3.17-1), libgsl0-dev (>= 1.3-1), lapack-dev (>=3.0.20000531a-22), blas-dev (>=1.1-1), fftw3-dev (>= 2.1.3-15), libsndfile1-dev (>= 1.0.3-1), guile-1.6-dev
 Standards-Version: 3.5.2
 
 Package: guile-numerics

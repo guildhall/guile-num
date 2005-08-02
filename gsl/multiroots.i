@@ -45,7 +45,7 @@ _wrap_gsl_multiroot_function_alloc (SCM s_0, SCM s_1)
     
     gh_allow_ints();
     {
-        gswig_result = SWIG_Guile_MakePtr (result, SWIGTYPE_p_gsl_multiroot_function);
+        gswig_result = SWIG_Guile_MakePtr (result, SWIGTYPE_p_gsl_multiroot_function_struct);
     }
     return gswig_result;
 #undef FUNC_NAME
@@ -61,7 +61,7 @@ _wrap_gsl_multiroot_function_free (SCM s_0)
     int gswig_list_p = 0;
     
     {
-        if (SWIG_Guile_GetPtr(s_0, (void **) &arg1, SWIGTYPE_p_gsl_multiroot_function))
+        if (SWIG_Guile_GetPtr(s_0, (void **) &arg1, SWIGTYPE_p_gsl_multiroot_function_struct))
         scm_wrong_type_arg(FUNC_NAME, 1, s_0);
     }
     gh_defer_ints();
@@ -153,7 +153,7 @@ _wrap_gsl_multiroot_function_fdf_alloc (SCM s_0, SCM s_1, SCM s_2)
 
 	gh_allow_ints();
 	gswig_result = SWIG_Guile_MakePtr (result,
-					   SWIGTYPE_p_gsl_multiroot_function_fdf);
+					   SWIGTYPE_p_gsl_multiroot_function_fdf_struct);
 	return gswig_result;
 #undef FUNC_NAME
 }
@@ -167,7 +167,7 @@ _wrap_gsl_multiroot_function_fdf_free (SCM s_0)
 	SCM gswig_result;
 	int gswig_list_p = 0;
 
-        if (SWIG_Guile_GetPtr(s_0, (void **) &arg1, SWIGTYPE_p_gsl_multiroot_function_fdf))
+        if (SWIG_Guile_GetPtr(s_0, (void **) &arg1, SWIGTYPE_p_gsl_multiroot_function_fdf_struct))
 		scm_wrong_type_arg(FUNC_NAME, 1, s_0);
 
 	gh_defer_ints();

@@ -1,5 +1,6 @@
 #! /bin/sh
 
+chmod +x destill.scm
 libtoolize --force
 autoheader
 aclocal
